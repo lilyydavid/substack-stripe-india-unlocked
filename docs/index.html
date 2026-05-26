@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Unblocking Indian Creator Payouts on Substack</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  background: #f7f6f3;
+  color: #1a1a1a;
+  line-height: 1.6;
+}
+
+.container {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 64px 24px 96px;
+}
+
+/* ── Hook ── */
+.eyebrow {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #ff6719;
+  margin-bottom: 14px;
+}
+
+h1 {
+  font-size: 30px;
+  font-weight: 800;
+  letter-spacing: -0.6px;
+  line-height: 1.2;
+  margin-bottom: 16px;
+}
+
+.hook-line {
+  font-size: 17px;
+  color: #555;
+  margin-bottom: 28px;
+  line-height: 1.6;
+  border-left: 3px solid #ff6719;
+  padding-left: 14px;
+}
+
+/* ── Why now banner ── */
+.why-now {
+  background: #1a1a1a;
+  color: #fff;
+  border-radius: 10px;
+  padding: 20px 24px;
+  margin-bottom: 32px;
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+}
+
+.why-now-label {
+  flex-shrink: 0;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #ff6719;
+  margin-top: 3px;
+}
+
+.why-now-text {
+  font-size: 14px;
+  line-height: 1.6;
+  color: #ccc;
+}
+
+.why-now-text strong { color: #fff; }
+
+/* ── Problem box ── */
+.problem-box {
+  background: #fff;
+  border: 1px solid #e0ddd8;
+  border-radius: 8px;
+  padding: 24px;
+  margin-bottom: 32px;
+}
+
+.problem-box p {
+  font-size: 16px;
+  margin-bottom: 0;
+  color: #333;
+  line-height: 1.6;
+}
+
+h2 {
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #888;
+  margin: 36px 0 12px;
+}
+
+p {
+  font-size: 16px;
+  margin-bottom: 16px;
+  color: #333;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 15px;
+  margin-bottom: 24px;
+}
+
+th {
+  text-align: left;
+  padding: 8px 12px;
+  background: #eeecea;
+  font-weight: 600;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #666;
+}
+
+td {
+  padding: 10px 12px;
+  border-bottom: 1px solid #e8e5e1;
+  vertical-align: top;
+}
+
+tr:last-child td { border-bottom: none; }
+
+.label {
+  font-weight: 600;
+  white-space: nowrap;
+  width: 160px;
+}
+
+code {
+  font-family: "SF Mono", ui-monospace, monospace;
+  font-size: 13px;
+  background: #eeecea;
+  padding: 1px 5px;
+  border-radius: 3px;
+}
+
+.artifacts {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 24px;
+}
+
+.artifact-link {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: #fff;
+  border: 1px solid #e0ddd8;
+  border-radius: 8px;
+  padding: 14px 18px;
+  text-decoration: none;
+  color: #1a1a1a;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.artifact-link:hover {
+  border-color: #ff6719;
+  box-shadow: 0 2px 8px rgba(255,103,25,0.08);
+}
+
+.artifact-icon { font-size: 20px; flex-shrink: 0; }
+
+.artifact-label {
+  font-weight: 600;
+  font-size: 15px;
+  display: block;
+}
+
+.artifact-desc {
+  font-size: 13px;
+  color: #777;
+  display: block;
+  margin-top: 2px;
+}
+
+.open-questions {
+  background: #fff;
+  border: 1px solid #e0ddd8;
+  border-left: 3px solid #ff6719;
+  border-radius: 8px;
+  padding: 20px 24px;
+  margin-bottom: 32px;
+}
+
+.open-questions p {
+  margin-bottom: 10px;
+  font-size: 15px;
+}
+
+.open-questions p:last-child { margin-bottom: 0; }
+
+.scope-note {
+  font-size: 14px;
+  color: #999;
+  margin-top: 32px;
+  padding-top: 24px;
+  border-top: 1px solid #e8e5e1;
+}
+
+.full-story {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #fff;
+  border: 1px solid #e0ddd8;
+  border-radius: 8px;
+  padding: 16px 20px;
+  text-decoration: none;
+  color: #1a1a1a;
+  margin-bottom: 36px;
+  transition: border-color 0.15s;
+}
+
+.full-story:hover { border-color: #ff6719; }
+
+.full-story-label {
+  font-size: 13px;
+  font-weight: 700;
+  color: #1a1a1a;
+}
+
+.full-story-sub {
+  font-size: 12px;
+  color: #888;
+  margin-top: 2px;
+}
+
+.full-story-arrow {
+  font-size: 18px;
+  color: #ff6719;
+  flex-shrink: 0;
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="eyebrow">India · Indonesia · Latin America</div>
+  <h1>Unblocking Indian Creator Payouts on Substack</h1>
+  <p class="hook-line">Indian creators with audiences of 10,000–50,000 subscribers are generating close to $0 in Substack GMV. Not because the audience isn't there — because the payment infrastructure is frozen.</p>
+
+  <div class="why-now">
+    <div class="why-now-label">Why now</div>
+    <div class="why-now-text">
+      <strong>Indian creators aren't waiting.</strong> They're wiring Razorpay, Instamojo, and Patreon into their Substack pages and building paid operations permanently off-platform. Every month this persists, the migration back gets harder — and Substack's position as the default paid newsletter platform in India weakens.
+    </div>
+  </div>
+
+  <div class="problem-box">
+    <p>Stripe India moved to an invite-only merchant model in response to RBI regulatory tightening — mandatory FIRA tracking, a 6-month forex realisation cap, and EDPMS compliance requirements that make per-creator manual review uneconomical. Substack, which routes all transactions exclusively through Stripe, had no fallback. Paid subscriptions froze.</p>
+  </div>
+
+  <a href="overview.html" class="full-story">
+    <div>
+      <div class="full-story-label">Read the full context →</div>
+      <div class="full-story-sub">Why the RBI mandates matter, who's losing, how creators are coping, and why the incentives align for a fix</div>
+    </div>
+    <span class="full-story-arrow">→</span>
+  </a>
+
+  <h2>The Fix</h2>
+  <p>The most tractable near-term unlock is not new payment infrastructure. It is giving Stripe's compliance team a structured, machine-readable endorsement signal from Substack that makes per-creator manual review unnecessary.</p>
+
+  <table>
+    <tr>
+      <th>Issue</th>
+      <th>Owner</th>
+      <th>What it does</th>
+    </tr>
+    <tr>
+      <td class="label">#101 — KYC Intake</td>
+      <td>Substack</td>
+      <td>Creator form capturing PAN, IFSC, bank account, RBI purpose code</td>
+    </tr>
+    <tr>
+      <td class="label">#102 — Telemetry Signer</td>
+      <td>Substack</td>
+      <td>Signed bundle attesting creator legitimacy (account age, subscriber count, open rate, zero chargebacks)</td>
+    </tr>
+    <tr>
+      <td class="label">#103 — Endorsement Bridge</td>
+      <td>Stripe</td>
+      <td>One optional field on <code>POST /v1/accounts</code> that accepts the signed bundle → 48h fast-track review vs. current 2–6 week manual queue</td>
+    </tr>
+  </table>
+
+  <p>Issues #101 and #102 are entirely within Substack's control and have standalone value as internal compliance records. Issue #103 requires Stripe to implement one new optional field — the narrowest possible API change.</p>
+
+  <h2>Artifacts</h2>
+  <div class="artifacts">
+    <a class="artifact-link" href="demo.html">
+      <span class="artifact-icon">🖥</span>
+      <span>
+        <span class="artifact-label">Live mockup — Creator KYC intake flow</span>
+        <span class="artifact-desc">Interactive walkthrough of the #101 onboarding form across all payout scenarios</span>
+      </span>
+    </a>
+    <a class="artifact-link" href="demo-all.html">
+      <span class="artifact-icon">⊞</span>
+      <span>
+        <span class="artifact-label">All screens — full flow gallery</span>
+        <span class="artifact-desc">All 10 states side by side: form, errors, bank verify, Stripe queue, rejection, activation</span>
+      </span>
+    </a>
+    <a class="artifact-link" href="https://github.com/lilyydavid/substack-stripe-india-unlocked/blob/main/api-design.md">
+      <span class="artifact-icon">📄</span>
+      <span>
+        <span class="artifact-label">API design — #101, #102, #103</span>
+        <span class="artifact-desc">Request/response specs, field validation rules, signing scheme, open questions for Stripe</span>
+      </span>
+    </a>
+    <a class="artifact-link" href="https://github.com/lilyydavid/substack-stripe-india-unlocked/blob/main/risk-analysis.md">
+      <span class="artifact-icon">⚠️</span>
+      <span>
+        <span class="artifact-label">Risk analysis</span>
+        <span class="artifact-desc">DPDPA liability, PAN hash question, telemetry gaming, IFSC maintenance — with mitigations</span>
+      </span>
+    </a>
+    <a class="artifact-link" href="https://github.com/lilyydavid/substack-stripe-india-unlocked/blob/main/batch-endorsement-proposal.md">
+      <span class="artifact-icon">📊</span>
+      <span>
+        <span class="artifact-label">Batch endorsement model</span>
+        <span class="artifact-desc">Why 10K creators changes the Stripe conversation from feature request to platform agreement — with economics</span>
+      </span>
+    </a>
+  </div>
+
+  <h2>Open Questions</h2>
+  <div class="open-questions">
+    <p><strong>For Stripe India:</strong> Does your RBI compliance require the raw PAN, or will you accept a platform-attested SHA-256 hash? The answer determines the DPDPA liability surface for Substack.</p>
+    <p><strong>For Stripe Connect:</strong> Is there an existing partner programme tier that already provides expedited review for high-trust platforms? If so, #103 may not need a new API primitive — Substack sends the bundle via a support channel instead.</p>
+    <p><strong>For Substack:</strong> Does a platform agreement with capped joint liability for endorsed creators fit within your current legal framework?</p>
+  </div>
+
+  <p class="scope-note">This proposal covers KYC intake, telemetry signing, and the Stripe endorsement bridge. Escrow infrastructure, dashboard gamification, and FIRA/FIRC compliance automation are out of scope. A follow-on proposal on the escrow layer opens if the endorsement path is confirmed viable.</p>
+
+</div>
+</body>
+</html>

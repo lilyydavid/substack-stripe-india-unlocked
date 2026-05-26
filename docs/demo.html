@@ -1,0 +1,3324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Substack — India Payout Setup (All Scenarios)</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  background: #f7f6f3;
+  color: #1a1a1a;
+  min-height: 100vh;
+  padding-top: 80px;
+}
+
+/* ── Scenario Nav ── */
+#scenario-nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  background: #fff;
+  border-bottom: 1px solid #e8e8e8;
+  z-index: 1000;
+  padding: 8px 16px;
+  overflow-x: auto;
+  white-space: nowrap;
+}
+.nav-inner {
+  display: inline-flex;
+  align-items: center;
+  gap: 16px;
+}
+.pill-group {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.pill-group-label {
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #999;
+}
+.pill-row {
+  display: inline-flex;
+  gap: 4px;
+}
+.pill {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  border: 1.5px solid transparent;
+  background: #f0f0f0;
+  color: #555;
+  border-left: 3px solid #ccc;
+  transition: all 0.15s;
+  -webkit-appearance: none;
+  appearance: none;
+  font-family: inherit;
+  line-height: 1.4;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.pill:hover { background: #e8e8e8; }
+.pill.active { background: #1a1a1a; color: #fff; border-color: #1a1a1a; }
+.pill.green { border-left-color: #2ea44f; }
+.pill.amber { border-left-color: #d4a017; }
+.pill.red { border-left-color: #d73a49; }
+.pill.blue { border-left-color: #0066cc; }
+.pill.gold { border-left-color: #d4a017; background: #fffbe6; }
+.pill-sep {
+  width: 1px;
+  background: #e0e0e0;
+  align-self: stretch;
+  margin: 0 4px;
+}
+
+/* ── Shell ── */
+.shell {
+  width: 100%;
+  max-width: 560px;
+  margin: 0 auto;
+  padding: 32px 16px 80px;
+  display: none;
+}
+.shell.visible { display: block; }
+
+/* ── Header ── */
+.header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 28px;
+}
+.logo { font-size: 22px; font-weight: 700; letter-spacing: -0.5px; color: #ff6719; }
+.logo-sep { color: #ccc; font-size: 20px; }
+.header-title { font-size: 14px; color: #666; font-weight: 500; }
+
+/* ── Stepper ── */
+.stepper {
+  display: flex;
+  align-items: center;
+  margin-bottom: 28px;
+}
+.step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+  position: relative;
+}
+.step:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  top: 14px;
+  left: 50%;
+  width: 100%;
+  height: 2px;
+  background: #e0e0e0;
+}
+.step:not(:last-child).done::after { background: #ff6719; }
+.step-circle {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  background: #e0e0e0;
+  color: #999;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 700;
+  position: relative; z-index: 1;
+  transition: all 0.3s;
+}
+.step.done .step-circle { background: #ff6719; color: #fff; }
+.step.active .step-circle { background: #1a1a1a; color: #fff; }
+.step.error .step-circle { background: #d73a49; color: #fff; }
+.step-label {
+  font-size: 10px;
+  color: #999;
+  margin-top: 4px;
+  font-weight: 500;
+}
+.step.done .step-label { color: #ff6719; }
+.step.active .step-label { color: #1a1a1a; font-weight: 600; }
+
+/* ── Card ── */
+.card {
+  background: #fff;
+  border: 1px solid #e8e8e8;
+  border-radius: 12px;
+  padding: 32px;
+  margin-bottom: 16px;
+}
+.card-title {
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 6px;
+  letter-spacing: -0.3px;
+}
+.card-subtitle {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 24px;
+  line-height: 1.5;
+}
+
+/* ── Form ── */
+.form-group {
+  margin-bottom: 18px;
+}
+.form-label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 6px;
+}
+.form-label .required { color: #d73a49; margin-left: 2px; }
+.form-input {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1.5px solid #ddd;
+  border-radius: 8px;
+  font-size: 14px;
+  font-family: inherit;
+  transition: border-color 0.2s;
+  outline: none;
+  background: #fff;
+}
+.form-input:focus { border-color: #1a1a1a; }
+.form-input.mono { font-family: 'Menlo', 'Monaco', 'Courier New', monospace; letter-spacing: 0.05em; }
+.form-input.valid { border-color: #2ea44f; }
+.form-input.invalid { border-color: #d73a49; }
+select.form-input { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%23666' d='M6 8L0 0h12z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; padding-right: 32px; }
+.form-error {
+  font-size: 12px;
+  color: #d73a49;
+  margin-top: 4px;
+  display: flex;
+  align-items: flex-start;
+  gap: 4px;
+  line-height: 1.4;
+}
+.form-hint {
+  font-size: 12px;
+  color: #777;
+  margin-top: 4px;
+}
+.purpose-badge {
+  display: inline-block;
+  background: #e6f4ea;
+  color: #2ea44f;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 10px;
+  margin-left: 8px;
+  vertical-align: middle;
+}
+
+/* ── Info boxes ── */
+.info-box {
+  padding: 12px 14px;
+  border-radius: 8px;
+  font-size: 13px;
+  line-height: 1.5;
+  margin-bottom: 18px;
+}
+.info-box.blue { background: #e8f0fe; border-left: 3px solid #0066cc; color: #003380; }
+.info-box.amber { background: #fff8e1; border-left: 3px solid #d4a017; color: #7a5700; }
+.info-box.green { background: #e6f4ea; border-left: 3px solid #2ea44f; color: #1a5e2a; }
+.info-box.red { background: #ffeef0; border-left: 3px solid #d73a49; color: #86181d; }
+.info-box.orange { background: #fff3e0; border-left: 3px solid #ff6719; color: #7a2d00; }
+
+/* ── Error banner ── */
+.error-banner {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  background: #ffeef0;
+  border: 1px solid #d73a49;
+  border-radius: 8px;
+  padding: 12px 14px;
+  margin-bottom: 20px;
+  font-size: 13px;
+  color: #86181d;
+  font-weight: 500;
+}
+
+/* ── Declaration ── */
+.decl-box {
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 12px;
+  height: 100px;
+  overflow-y: auto;
+  font-size: 12px;
+  color: #555;
+  line-height: 1.6;
+  margin-bottom: 10px;
+  background: #fafafa;
+}
+.checkbox-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 13px;
+  color: #333;
+  cursor: pointer;
+  line-height: 1.4;
+}
+.checkbox-row input[type=checkbox] { margin-top: 2px; flex-shrink: 0; }
+
+/* ── Buttons ── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1.5px solid transparent;
+  transition: all 0.15s;
+  font-family: inherit;
+}
+.btn-primary {
+  background: #ff6719;
+  color: #fff;
+  border-color: #ff6719;
+}
+.btn-primary:hover { background: #e55a10; }
+.btn-primary:disabled { background: #ccc; border-color: #ccc; cursor: not-allowed; }
+.btn-secondary {
+  background: #fff;
+  color: #333;
+  border-color: #ddd;
+}
+.btn-secondary:hover { border-color: #999; }
+.btn-outline-orange {
+  background: #fff;
+  color: #ff6719;
+  border-color: #ff6719;
+}
+.btn-outline-orange:hover { background: #fff3e0; }
+.btn-outline-red {
+  background: #fff;
+  color: #d73a49;
+  border-color: #d73a49;
+}
+.btn-green {
+  background: #2ea44f;
+  color: #fff;
+  border-color: #2ea44f;
+}
+.btn-green:hover { background: #268a42; }
+.btn-full { width: 100%; }
+.btn-row {
+  display: flex;
+  gap: 10px;
+  margin-top: 8px;
+}
+.btn-row .btn { flex: 1; }
+
+/* ── Badges ── */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+}
+.badge-green { background: #e6f4ea; color: #2ea44f; border: 1px solid #b7e4c7; }
+.badge-amber { background: #fff8e1; color: #d4a017; border: 1px solid #ffe082; }
+.badge-red { background: #ffeef0; color: #d73a49; border: 1px solid #f9c0c5; }
+.badge-blue { background: #e8f0fe; color: #0066cc; border: 1px solid #b3d1ff; }
+.badge-gold { background: #fff8e1; color: #b8860b; border: 1px solid #ffd700; }
+.confirmed-badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: #2ea44f;
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+.confirmed-badge .icon { font-size: 18px; }
+
+/* ── Endorsement panel ── */
+.endorsement-panel {
+  border: 1px solid #e8e8e8;
+  border-radius: 10px;
+  padding: 18px;
+  margin-bottom: 18px;
+}
+.endorsement-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+.endorsement-title { font-size: 14px; font-weight: 700; }
+
+/* ── Criteria table ── */
+.criteria-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.criteria-table tr { border-bottom: 1px solid #f0f0f0; }
+.criteria-table tr:last-child { border-bottom: none; }
+.criteria-table td { padding: 8px 4px; vertical-align: middle; }
+.criteria-table .crit-label { color: #555; font-weight: 500; }
+.criteria-table .crit-value { color: #333; font-weight: 600; text-align: right; white-space: nowrap; }
+.criteria-table .crit-status { text-align: right; padding-left: 8px; }
+.progress-bar-wrap {
+  width: 80px;
+  height: 6px;
+  background: #e8e8e8;
+  border-radius: 3px;
+  overflow: hidden;
+  display: inline-block;
+  vertical-align: middle;
+  margin-left: 6px;
+}
+.progress-bar-fill {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 0.6s ease;
+}
+.fill-green { background: #2ea44f; }
+.fill-amber { background: #d4a017; }
+.fill-red { background: #d73a49; }
+
+/* ── Coin shower / Pledge wall ── */
+.pledge-section {
+  margin-top: 20px;
+}
+.pledge-title {
+  font-size: 15px;
+  font-weight: 700;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.live-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: #2ea44f;
+  animation: livePulse 1.5s infinite;
+  flex-shrink: 0;
+}
+@keyframes livePulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(0.8); }
+}
+.coin-arena {
+  height: 180px;
+  background: linear-gradient(180deg, #fffbf5 0%, #fff8e8 100%);
+  border: 1px solid #f0e0c0;
+  border-radius: 10px;
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 12px;
+}
+.wallet {
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 28px;
+  line-height: 1;
+  z-index: 2;
+}
+.wallet-total {
+  position: absolute;
+  bottom: 44px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 22px;
+  font-weight: 800;
+  color: #ff6719;
+  white-space: nowrap;
+  z-index: 2;
+  letter-spacing: -0.5px;
+}
+.coin {
+  position: absolute;
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #ffd700, #ff9900);
+  border: 1.5px solid #e8a000;
+  z-index: 1;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 10px;
+  pointer-events: none;
+  transition: none;
+}
+.pledge-stats {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 12px;
+}
+.pledge-stat {
+  flex: 1;
+  text-align: center;
+  padding: 10px 8px;
+  background: #f7f6f3;
+  border-radius: 8px;
+  border: 1px solid #e8e8e8;
+}
+.pledge-stat-value {
+  font-size: 18px;
+  font-weight: 800;
+  color: #ff6719;
+  letter-spacing: -0.5px;
+}
+.pledge-stat-label {
+  font-size: 11px;
+  color: #777;
+  margin-top: 2px;
+  font-weight: 500;
+}
+.share-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+  background: #f7f6f3;
+  border: 1px solid #e8e8e8;
+  border-radius: 8px;
+  padding: 8px 12px;
+}
+.share-url {
+  flex: 1;
+  font-size: 12px;
+  color: #0066cc;
+  font-weight: 500;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.milestone-wrap {
+  margin-bottom: 12px;
+}
+.milestone-label {
+  font-size: 12px;
+  color: #777;
+  margin-bottom: 5px;
+  display: flex;
+  justify-content: space-between;
+}
+.milestone-track {
+  height: 10px;
+  background: #e8e8e8;
+  border-radius: 5px;
+  overflow: hidden;
+  position: relative;
+}
+.milestone-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #ff6719, #ff9a00);
+  border-radius: 5px;
+  transition: width 0.5s ease;
+}
+.milestone-fill.complete {
+  background: linear-gradient(90deg, #ffd700, #ff9a00);
+  box-shadow: 0 0 8px rgba(255, 200, 0, 0.6);
+  animation: milestoneGlow 1.5s infinite;
+}
+@keyframes milestoneGlow {
+  0%, 100% { box-shadow: 0 0 6px rgba(255, 200, 0, 0.5); }
+  50% { box-shadow: 0 0 14px rgba(255, 200, 0, 0.9); }
+}
+.milestone-banner {
+  background: linear-gradient(135deg, #fff8dc, #ffe066);
+  border: 1.5px solid #ffd700;
+  border-radius: 10px;
+  padding: 14px 16px;
+  margin-bottom: 14px;
+  animation: slideDown 0.4s ease;
+}
+@keyframes slideDown {
+  from { transform: translateY(-20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+.milestone-banner-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: #7a5700;
+  margin-bottom: 4px;
+}
+.milestone-banner-body {
+  font-size: 12px;
+  color: #8a6500;
+  line-height: 1.5;
+}
+.pledger-ticker {
+  font-size: 12px;
+  color: #555;
+}
+.pledger-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 0;
+  border-bottom: 1px solid #f0f0f0;
+  animation: fadeInUp 0.4s ease;
+}
+.pledger-item:last-child { border-bottom: none; }
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.pledger-avatar {
+  width: 24px; height: 24px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px;
+  font-weight: 700;
+  color: #fff;
+  flex-shrink: 0;
+}
+.pledger-name { flex: 1; font-weight: 500; color: #333; }
+.pledger-amount { font-weight: 700; color: #b8860b; }
+.pledger-time { color: #aaa; font-size: 11px; }
+
+/* ── Timeline ── */
+.timeline { margin: 16px 0; }
+.timeline-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding-bottom: 16px;
+  position: relative;
+}
+.timeline-item:not(:last-child)::before {
+  content: '';
+  position: absolute;
+  left: 11px;
+  top: 24px;
+  bottom: 0;
+  width: 2px;
+  background: #e0e0e0;
+}
+.timeline-item.done:not(:last-child)::before { background: #2ea44f; }
+.tl-icon {
+  width: 24px; height: 24px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+.tl-icon.done { background: #2ea44f; color: #fff; }
+.tl-icon.active { background: #fff; border: 2px solid #0066cc; color: #0066cc; position: relative; }
+.tl-icon.active::after {
+  content: '';
+  position: absolute;
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: #0066cc;
+  animation: tlPulse 1.2s infinite;
+}
+@keyframes tlPulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.5); opacity: 0.3; }
+}
+.tl-icon.grey { background: #e0e0e0; color: #999; }
+.tl-icon.fail { background: #d73a49; color: #fff; }
+.tl-body { flex: 1; }
+.tl-title { font-size: 13px; font-weight: 600; color: #333; }
+.tl-sub { font-size: 12px; color: #777; margin-top: 2px; }
+
+/* ── Penny-drop panels ── */
+.penny-panel {
+  border: 1.5px solid #0066cc;
+  border-radius: 10px;
+  padding: 16px;
+  background: #f0f6ff;
+  margin-bottom: 18px;
+}
+.penny-panel-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: #003380;
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.penny-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: #0066cc;
+  animation: livePulse 1.5s infinite;
+  flex-shrink: 0;
+}
+.penny-panel-body { font-size: 13px; color: #003380; line-height: 1.5; margin-bottom: 12px; }
+
+/* ── Option cards ── */
+.option-cards { display: flex; flex-direction: column; gap: 10px; margin: 14px 0; }
+.option-card {
+  border: 1.5px solid #e8e8e8;
+  border-radius: 10px;
+  padding: 14px 16px;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+  background: #fff;
+}
+.option-card:hover { border-color: #ff6719; background: #fff9f5; }
+.option-card-title { font-size: 13px; font-weight: 700; margin-bottom: 3px; }
+.option-card-body { font-size: 12px; color: #666; line-height: 1.4; }
+
+/* ── Progress steps ── */
+.progress-steps { display: flex; flex-direction: column; gap: 10px; margin: 16px 0; }
+.progress-step {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 13px;
+}
+.ps-icon {
+  width: 24px; height: 24px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+.ps-icon.done { background: #2ea44f; color: #fff; }
+.ps-icon.spin {
+  background: #fff;
+  border: 2px solid #0066cc;
+  color: #0066cc;
+  animation: rotate 1.2s linear infinite;
+}
+@keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+/* ── Email preview ── */
+.email-preview {
+  background: #f7f7f7;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 12px;
+  font-size: 12px;
+  margin-top: 16px;
+}
+.email-from { color: #555; margin-bottom: 4px; }
+.email-subject { font-weight: 700; color: #333; margin-bottom: 8px; }
+.email-body { color: #555; line-height: 1.5; padding: 10px; background: #fff; border-radius: 6px; border: 1px solid #e0e0e0; font-size: 11px; }
+
+/* ── Activation ── */
+.activation-card {
+  text-align: center;
+  padding: 32px;
+}
+.activation-title { font-size: 24px; font-weight: 800; margin-bottom: 8px; letter-spacing: -0.5px; }
+.activation-subtitle { font-size: 15px; color: #555; margin-bottom: 24px; }
+.stats-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin: 20px 0;
+  text-align: left;
+}
+.stat-cell {
+  background: #f7f6f3;
+  border: 1px solid #e8e8e8;
+  border-radius: 10px;
+  padding: 14px;
+}
+.stat-cell-label { font-size: 11px; color: #777; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px; }
+.stat-cell-value { font-size: 16px; font-weight: 800; color: #1a1a1a; }
+.checklist { text-align: left; margin: 16px 0; }
+.checklist-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 8px 0;
+  border-bottom: 1px solid #f0f0f0;
+  font-size: 13px;
+}
+.checklist-item:last-child { border-bottom: none; }
+.cl-icon { flex-shrink: 0; font-size: 14px; }
+.cl-text { flex: 1; color: #333; line-height: 1.4; }
+.cl-text.done { color: #2ea44f; }
+
+/* ── Annotations ── */
+.annotation-panel {
+  border-top: 2px dashed #e0e0e0;
+  padding: 16px 0 0;
+  margin-top: 8px;
+}
+.annotation-title {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #aaa;
+  margin-bottom: 10px;
+}
+.annotation-item {
+  display: flex;
+  gap: 10px;
+  padding: 6px 0;
+  font-size: 12px;
+  color: #666;
+  border-bottom: 1px solid #f0f0f0;
+  line-height: 1.5;
+}
+.annotation-item:last-child { border-bottom: none; }
+.annotation-ref {
+  flex-shrink: 0;
+  font-weight: 700;
+  color: #ff6719;
+  width: 40px;
+}
+
+/* ── Loading spinner ── */
+.spinner {
+  display: inline-block;
+  width: 20px; height: 20px;
+  border: 2px solid rgba(255,255,255,0.4);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: rotate 0.8s linear infinite;
+  vertical-align: middle;
+}
+.spinner.dark {
+  border-color: rgba(0,0,0,0.15);
+  border-top-color: #333;
+}
+
+/* ── Confetti (5a) ── */
+@keyframes confettiFall {
+  0% { transform: translateY(-10px) rotate(0deg); opacity: 1; }
+  100% { transform: translateY(200px) rotate(720deg); opacity: 0; }
+}
+.confetti-piece {
+  position: absolute;
+  width: 8px; height: 8px;
+  animation: confettiFall 2s ease-in forwards;
+  border-radius: 2px;
+}
+
+/* ── Misc ── */
+.divider { height: 1px; background: #f0f0f0; margin: 20px 0; }
+.section-label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #aaa;
+  margin-bottom: 10px;
+}
+.what-you-can-do { margin-top: 14px; }
+.wyd-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 6px 0;
+  font-size: 13px;
+  color: #555;
+  border-bottom: 1px solid #f0f0f0;
+  line-height: 1.4;
+}
+.wyd-item:last-child { border-bottom: none; }
+.wyd-bullet { color: #ff6719; font-weight: 700; flex-shrink: 0; }
+.footer { margin-top: 24px; font-size: 12px; color: #aaa; text-align: center; line-height: 1.6; }
+.footer a { color: #0066cc; text-decoration: none; }
+</style>
+</head>
+<body>
+
+<!-- ── Scenario Nav ── -->
+<div id="scenario-nav">
+  <div class="nav-inner">
+    <div class="pill-group">
+      <div class="pill-group-label">FORM</div>
+      <div class="pill-row">
+        <button type="button" class="pill green active" onclick="showScenario('1a')">1a Default</button>
+        <button type="button" class="pill amber" onclick="showScenario('1b')">1b Errors</button>
+      </div>
+    </div>
+    <div class="pill-sep"></div>
+    <div class="pill-group">
+      <div class="pill-group-label">POST-SUBMIT</div>
+      <div class="pill-row">
+        <button type="button" class="pill amber" onclick="showScenario('2a')">2a Endorsement Status</button>
+        <button type="button" class="pill green" onclick="showScenario('2b')">2b Qualified + Pledges</button>
+        <button type="button" class="pill gold" onclick="showScenario('2c')">2c Milestone Hit</button>
+      </div>
+    </div>
+    <div class="pill-sep"></div>
+    <div class="pill-group">
+      <div class="pill-group-label">BANK VERIFY</div>
+      <div class="pill-row">
+        <button type="button" class="pill amber" onclick="showScenario('3a')">3a Timeout</button>
+        <button type="button" class="pill green" onclick="showScenario('3b')">3b Confirmed</button>
+      </div>
+    </div>
+    <div class="pill-sep"></div>
+    <div class="pill-group">
+      <div class="pill-group-label">STRIPE</div>
+      <div class="pill-row">
+        <button type="button" class="pill blue" onclick="showScenario('4a')">4a Stripe India Invite</button>
+        <button type="button" class="pill red" onclick="showScenario('4b')">4b Rejected</button>
+      </div>
+    </div>
+    <div class="pill-sep"></div>
+    <div class="pill-group">
+      <div class="pill-group-label">LIVE</div>
+      <div class="pill-row">
+        <button type="button" class="pill green" onclick="showScenario('5a')">5a Activated</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════
+     SCENARIO 1a — Form (Default)
+════════════════════════════════════ -->
+<div class="shell visible" id="s-1a">
+  <div class="header">
+    <span class="logo">Substack</span>
+    <span class="logo-sep">|</span>
+    <span class="header-title" id="ht-1a">Set up India payouts</span>
+  </div>
+  <div class="stepper">
+    <div class="step done">
+      <div class="step-circle">✓</div>
+      <div class="step-label">Account</div>
+    </div>
+    <div class="step active">
+      <div class="step-circle">2</div>
+      <div class="step-label">Identity</div>
+    </div>
+    <div class="step">
+      <div class="step-circle">3</div>
+      <div class="step-label">Waiting</div>
+    </div>
+    <div class="step">
+      <div class="step-circle">4</div>
+      <div class="step-label">Review</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Set up payouts</div>
+    <div class="card-subtitle" id="form-subtitle-1a">Select your country to see the payout setup requirements.</div>
+
+    <!-- ── Country selector ── -->
+    <div class="form-group">
+      <label class="form-label">Country <span class="required">*</span></label>
+      <select id="country-1a" class="form-input" onchange="applyCountryConfig(this.value)">
+        <option value="">Select your country…</option>
+        <optgroup label="Asia Pacific">
+          <option value="IN">🇮🇳 India</option>
+          <option value="ID">🇮🇩 Indonesia</option>
+        </optgroup>
+        <optgroup label="Latin America">
+          <option value="BR">🇧🇷 Brazil</option>
+          <option value="MX">🇲🇽 Mexico</option>
+          <option value="CO">🇨🇴 Colombia</option>
+          <option value="AR">🇦🇷 Argentina</option>
+          <option value="CL">🇨🇱 Chile</option>
+          <option value="PE">🇵🇪 Peru</option>
+        </optgroup>
+      </select>
+    </div>
+
+    <!-- Local PA notice (shown for countries not on Stripe direct) -->
+    <div id="local-pa-notice-1a" style="display:none;margin-bottom:16px;" class="info-box" style="background:#fff8f0;border-color:#ff6719;">
+    </div>
+
+    <!-- Country-specific form fields (rendered by JS) -->
+    <div id="country-form-1a" style="display:none;">
+
+      <!-- ── Personal identity ── -->
+      <div class="section-label" style="text-align:left;margin-bottom:12px;">Personal identity</div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:0;">
+        <div class="form-group" style="margin-bottom:0;">
+          <label class="form-label">First name <span class="required">*</span></label>
+          <input class="form-input" id="fname-1a" type="text" placeholder="First name">
+        </div>
+        <div class="form-group" style="margin-bottom:0;">
+          <label class="form-label">Last name <span class="required">*</span></label>
+          <input class="form-input" id="lname-1a" type="text" placeholder="Last name">
+        </div>
+      </div>
+      <div class="form-hint" id="name-hint-1a" style="margin-top:4px;margin-bottom:12px;"></div>
+
+      <div class="form-group" style="margin-top:4px;">
+        <label class="form-label">Date of birth <span class="required">*</span></label>
+        <input class="form-input" id="dob-1a" type="date" max="2006-01-01">
+        <div class="form-hint">Required for identity verification</div>
+      </div>
+
+      <!-- Tax ID (country-specific) -->
+      <div class="form-group" id="tax-id-group-1a">
+        <label class="form-label" id="tax-id-label-1a">Tax ID <span class="required">*</span></label>
+        <input id="tax-id-1a" class="form-input mono" type="text" autocomplete="off" style="text-transform:uppercase">
+        <div class="form-hint" id="tax-id-hint-1a"></div>
+        <div id="tax-id-err-1a" class="form-error" style="display:none"></div>
+      </div>
+
+      <!-- Phone -->
+      <div class="form-group">
+        <label class="form-label">Mobile number <span class="required">*</span></label>
+        <div style="display:flex;gap:8px;">
+          <span class="form-input" id="phone-prefix-1a" style="width:64px;text-align:center;flex-shrink:0;color:#555;background:#f7f6f3;font-size:13px;"></span>
+          <input class="form-input" id="phone-1a" type="tel" inputmode="numeric" style="flex:1;">
+        </div>
+        <div class="form-hint" id="phone-hint-1a"></div>
+      </div>
+
+      <!-- ── Address ── -->
+      <div class="section-label" style="text-align:left;margin:20px 0 12px;">Residential address</div>
+
+      <div class="form-group">
+        <label class="form-label">Address line 1 <span class="required">*</span></label>
+        <input class="form-input" type="text" id="addr1-1a" placeholder="Street address">
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+        <div class="form-group" style="margin-bottom:0;">
+          <label class="form-label">City <span class="required">*</span></label>
+          <input class="form-input" type="text" id="city-1a" placeholder="City">
+        </div>
+        <div class="form-group" style="margin-bottom:0;">
+          <label class="form-label" id="state-label-1a">State <span class="required">*</span></label>
+          <select class="form-input" id="state-1a"><option value="">Select…</option></select>
+        </div>
+      </div>
+      <div class="form-group" style="margin-top:12px;">
+        <label class="form-label" id="postal-label-1a">Postal code <span class="required">*</span></label>
+        <input class="form-input mono" id="postal-1a" type="text" inputmode="numeric">
+      </div>
+
+      <!-- ── Business details ── -->
+      <div class="section-label" style="text-align:left;margin:20px 0 12px;">Business details</div>
+
+      <div class="form-group">
+        <label class="form-label">Business type <span class="required">*</span></label>
+        <select class="form-input" id="btype-1a">
+          <option value="">Select…</option>
+          <option value="individual">Individual</option>
+          <option value="sole_prop">Sole proprietorship</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Publication URL <span class="required">*</span></label>
+        <input class="form-input" id="pub-url-1a" type="text" placeholder="yourname.substack.com">
+        <div class="form-hint">Confirms your publishing activity</div>
+      </div>
+
+      <!-- Optional local tax registration -->
+      <div class="form-group" id="tax-optional-group-1a" style="display:none;">
+        <label class="form-label" id="tax-optional-label-1a"></label>
+        <input class="form-input mono" id="tax-optional-1a" type="text" style="text-transform:uppercase">
+        <div class="form-hint" id="tax-optional-hint-1a"></div>
+      </div>
+
+      <!-- RBI purpose code — India only -->
+      <div id="purpose-code-section-1a" style="display:none;">
+        <div class="section-label" style="text-align:left;margin:20px 0 12px;">Remittance purpose</div>
+        <div class="form-group">
+          <label class="form-label">Business intent <span class="required">*</span></label>
+          <select id="intent-1a" class="form-input" onchange="onIntentChange(this, 'intent-badge-1a', 'continue-1a')">
+            <option value="">Select purpose of inward remittance…</option>
+            <option value="P1101">Newsletter / written content (P1101)</option>
+            <option value="P1102">Podcast / audio content (P1102)</option>
+            <option value="P1103">Video content (P1103)</option>
+            <option value="P1006">Research services (P1006)</option>
+            <option value="P0801">Consulting services (P0801)</option>
+          </select>
+          <div id="intent-badge-1a" style="margin-top:6px;display:none">
+            <span class="badge badge-green" id="intent-badge-1a-text"></span>
+            <span style="font-size:12px;color:#777;margin-left:6px;">This purpose code will appear on all inward remittance records (FIRC).</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Payout / bank section (country-specific) ── -->
+      <div class="section-label" id="payout-section-label-1a" style="text-align:left;margin:20px 0 12px;">Payout details</div>
+      <div id="payout-fields-1a"></div>
+
+      <!-- Test deposit notice -->
+      <div class="info-box blue" id="test-deposit-notice-1a" style="margin-bottom:20px;"></div>
+
+      <!-- Compliance footer -->
+      <div class="form-hint" id="compliance-note-1a" style="margin-bottom:16px;color:#aaa;font-size:11px;text-align:center;"></div>
+
+      <!-- Declaration -->
+      <div class="form-group">
+        <label class="form-label">Declaration</label>
+        <div class="decl-box" id="decl-text-1a">
+          I declare that the information provided is true and complete. I confirm I am a resident of the stated country for tax purposes, the identity document belongs to me, and the payout account is held in my name. I authorise Substack to share my information with the relevant payment processor for account verification and payout processing.
+        </div>
+        <label class="checkbox-row" id="decl-check-1a">
+          <input type="checkbox" id="decl-cb-1a" onchange="updateContinue1a()">
+          <span>I have read and agree to the declaration above</span>
+        </label>
+      </div>
+
+      <div class="btn-row" style="margin-top:24px;">
+        <button class="btn btn-secondary" onclick="showScenario('1a')">← Back</button>
+        <button class="btn btn-primary" id="continue-1a" disabled onclick="submitForm1a()">Continue →</button>
+      </div>
+
+    </div><!-- /country-form-1a -->
+  </div>
+
+  <div class="annotation-panel">
+    <div class="annotation-title">Annotations</div>
+    <div class="annotation-item"><span class="annotation-ref">8 countries</span>Form targets India, Indonesia, and 6 LatAm markets (BR, MX, CO, AR, CL, PE). Fields are driven by a JS country config — tax ID type, phone prefix, routing identifier (IFSC / BI bank code / PIX / CLABE / CBU / CCI), payout rail (Stripe direct vs local PA), and optional local tax registration all vary by country.</div>
+    <div class="annotation-item"><span class="annotation-ref">Local PA</span>For all non-India countries, Stripe is not available as a direct payout rail. A notice explains the licensed local PA (Xendit/Midtrans for ID, BACEN PI for BR, CNBV SPEI for MX, SFC for CO, BCRA for AR, CMF for CL, SBS for PE). Creator experience is identical — routing is invisible.</div>
+    <div class="annotation-item"><span class="annotation-ref">IN only</span>RBI purpose codes (P1101–P0801) and IFSC validation only appear for India. Other countries use their own regulatory frameworks and do not require RBI P-codes.</div>
+    <div class="annotation-item"><span class="annotation-ref">#101</span>PAN/IFSC client-side validation active for India. Other countries show format hints only — full validation requires server-side integration with each country's identity verification service.</div>
+  </div>
+  <div class="footer">
+    <a href="#">Privacy Policy</a> · <a href="#">Terms</a> · <a href="#">Help</a>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════
+     SCENARIO 1b — Form (Validation Errors)
+════════════════════════════════════ -->
+<div class="shell" id="s-1b">
+  <div class="header">
+    <span class="logo">Substack</span>
+    <span class="logo-sep">|</span>
+    <span class="header-title" id="ht-1b">Set up India payouts</span>
+  </div>
+  <div class="stepper">
+    <div class="step done">
+      <div class="step-circle">✓</div>
+      <div class="step-label">Account</div>
+    </div>
+    <div class="step active">
+      <div class="step-circle">2</div>
+      <div class="step-label">Identity</div>
+    </div>
+    <div class="step">
+      <div class="step-circle">3</div>
+      <div class="step-label">Waiting</div>
+    </div>
+    <div class="step">
+      <div class="step-circle">4</div>
+      <div class="step-label">Review</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="error-banner">
+      <span style="font-size:18px;flex-shrink:0;">⛔</span>
+      <span>6 errors need fixing before you can continue. Review the highlighted fields below.</span>
+    </div>
+
+    <div class="card-title">Verify your identity</div>
+    <div class="card-subtitle">Please correct the highlighted fields.</div>
+
+    <!-- ── Personal identity errors ── -->
+    <div class="section-label" style="text-align:left;margin-bottom:12px;">Personal identity</div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+      <div class="form-group" style="margin-bottom:0;">
+        <label class="form-label">First name <span class="required">*</span></label>
+        <input class="form-input valid" type="text" value="Priya" readonly>
+      </div>
+      <div class="form-group" style="margin-bottom:0;">
+        <label class="form-label">Last name <span class="required">*</span></label>
+        <input class="form-input invalid" type="text" value="Raghunathan" readonly>
+        <div class="form-error" style="font-size:11px;">⚠ PAN 5th char 'X' doesn't match surname initial 'R'. Enter name exactly as on PAN card.</div>
+      </div>
+    </div>
+
+    <div class="form-group" style="margin-top:12px;">
+      <label class="form-label">Date of birth <span class="required">*</span></label>
+      <input class="form-input invalid" type="date" value="2010-03-15" readonly>
+      <div class="form-error">⚠ Date of birth indicates age under 18. Stripe requires the account holder to be at least 18 years old.</div>
+    </div>
+
+    <!-- PAN — invalid entity type -->
+    <div class="form-group">
+      <label class="form-label">PAN number <span class="required">*</span></label>
+      <input class="form-input mono invalid" type="text" value="ABCCA1234A" maxlength="10" style="text-transform:uppercase" readonly>
+      <div class="form-error">⚠ PAN entity type 'C' (5th character) is not accepted — only individual (P) PANs are valid. Company and HUF PANs cannot be used.</div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Mobile number <span class="required">*</span></label>
+      <div style="display:flex;gap:8px;">
+        <span class="form-input" style="width:60px;text-align:center;flex-shrink:0;color:#555;background:#f7f6f3;">+91</span>
+        <input class="form-input valid" type="tel" value="98765 43210" readonly style="flex:1;">
+      </div>
+    </div>
+
+    <!-- ── Address errors ── -->
+    <div class="section-label" style="text-align:left;margin:20px 0 12px;">Residential address</div>
+
+    <div class="form-group">
+      <label class="form-label">Address line 1 <span class="required">*</span></label>
+      <input class="form-input valid" type="text" value="204, Neelkanth Towers, MG Road" readonly>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+      <div class="form-group" style="margin-bottom:0;">
+        <label class="form-label">City <span class="required">*</span></label>
+        <input class="form-input valid" type="text" value="Mumbai" readonly>
+      </div>
+      <div class="form-group" style="margin-bottom:0;">
+        <label class="form-label">State <span class="required">*</span></label>
+        <select class="form-input valid"><option selected>Maharashtra</option></select>
+      </div>
+    </div>
+    <div class="form-group" style="margin-top:12px;">
+      <label class="form-label">PIN code <span class="required">*</span></label>
+      <input class="form-input mono invalid" type="text" value="12345" readonly>
+      <div class="form-error">⚠ PIN code must be 6 digits. "12345" is only 5 digits.</div>
+    </div>
+
+    <!-- ── Business details errors ── -->
+    <div class="section-label" style="text-align:left;margin:20px 0 12px;">Business details</div>
+
+    <div class="form-group">
+      <label class="form-label">Business type <span class="required">*</span></label>
+      <select class="form-input invalid">
+        <option value="">Select…</option>
+        <option>Individual</option><option>Sole proprietorship</option>
+      </select>
+      <div class="form-error">⚠ Business type is required by Stripe.</div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Publication URL <span class="required">*</span></label>
+      <input class="form-input invalid" type="text" value="substack.com" readonly>
+      <div class="form-error">⚠ Please enter your specific publication URL, not substack.com. Example: yourname.substack.com</div>
+    </div>
+
+    <!-- ── Purpose code ── -->
+    <div class="section-label" style="text-align:left;margin:20px 0 12px;">Remittance purpose</div>
+
+    <div class="form-group">
+      <label class="form-label">Business intent <span class="required">*</span></label>
+      <select class="form-input invalid">
+        <option value="">Select purpose of inward remittance…</option>
+        <option value="P1101">Newsletter / written content (P1101)</option>
+      </select>
+      <div class="form-error">⚠ Please select a business intent to continue.</div>
+    </div>
+
+    <!-- ── Bank account errors ── -->
+    <div class="section-label" style="text-align:left;margin:20px 0 12px;">Bank account</div>
+
+    <div class="form-group">
+      <label class="form-label">Account number <span class="required">*</span></label>
+      <input class="form-input mono invalid" type="text" value="1234" readonly>
+      <div class="form-error">⚠ Account number must be 9–18 digits. "1234" is only 4 digits.</div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">IFSC code <span class="required">*</span></label>
+      <input class="form-input mono invalid" type="text" value="NOTANIFSC" readonly>
+      <div class="form-error">⚠ Invalid format. Expected: AAAA0AAAAAA (4 letters · zero · 6 alphanumeric). Example: HDFC0001234</div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Account type <span class="required">*</span></label>
+      <select class="form-input"><option value="">Select…</option><option>Savings</option><option>Current</option></select>
+    </div>
+
+    <div class="info-box blue" style="margin-bottom:20px;">
+      <strong>₹1 test deposit</strong> — We'll send a ₹1 test deposit once all errors are fixed.
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Declaration</label>
+      <div class="decl-box" style="font-size:12px;">
+        I declare the information is true and complete. I confirm I am a resident individual in India for tax purposes, the PAN belongs to me, the bank account is in my name, and the inward remittances comply with FEMA and RBI guidelines. I authorise Substack to share my information with Stripe Payments India Pvt Ltd.
+      </div>
+      <label class="checkbox-row">
+        <input type="checkbox">
+        <span>I have read and agree to the declaration above</span>
+      </label>
+    </div>
+
+    <div class="btn-row" style="margin-top:24px;">
+      <button class="btn btn-secondary">← Back</button>
+      <button class="btn btn-primary" disabled>Continue →</button>
+    </div>
+  </div>
+
+  <div class="annotation-panel">
+    <div class="annotation-title">Annotations</div>
+    <div class="annotation-item"><span class="annotation-ref">#101</span>All errors accumulate — no fail-fast. Error banner counts total so the user sees scope upfront. Each error message names the exact field, value received, and what was expected.</div>
+    <div class="annotation-item"><span class="annotation-ref">#101</span>PAN entity type check (5th char must be 'P') and surname-initial check are client-side mirrors of server validation. Both give specific character-position feedback, not just "invalid PAN".</div>
+    <div class="annotation-item"><span class="annotation-ref">Stripe</span>business_type and business_profile.url are Stripe-required fields — blank values cause missing_required_field errors on account creation. URL must be a specific publication URL, not the platform root.</div>
+    <div class="annotation-item"><span class="annotation-ref">Stripe</span>DOB age check (must be ≥18) is validated client-side and server-side. Stripe rejects accounts where the individual is under 18.</div>
+  </div>
+  <div class="footer">
+    <a href="#">Privacy Policy</a> · <a href="#">Terms</a> · <a href="#">Help</a>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════
+     SCENARIO 2a — Endorsement Status (default post-submit landing)
+════════════════════════════════════ -->
+<div class="shell" id="s-2a">
+  <div class="header">
+    <span class="logo">Substack</span>
+    <span class="logo-sep">|</span>
+    <span class="header-title" id="ht-2a">Set up India payouts</span>
+  </div>
+  <div class="stepper">
+    <div class="step done">
+      <div class="step-circle">✓</div>
+      <div class="step-label">Account</div>
+    </div>
+    <div class="step done">
+      <div class="step-circle">✓</div>
+      <div class="step-label">Identity</div>
+    </div>
+    <div class="step active">
+      <div class="step-circle">3</div>
+      <div class="step-label">Waiting</div>
+    </div>
+    <div class="step">
+      <div class="step-circle">4</div>
+      <div class="step-label">Review</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="confirmed-badge">
+      <span class="icon">✅</span>
+      <span>Identity submitted · KYC-2026-05-24-NPQ</span>
+    </div>
+
+    <div class="card-title" style="margin-bottom:4px;">Here's where you stand</div>
+    <div class="card-subtitle">Every creator sees this screen after submitting. Your current platform metrics are compared against the endorsement thresholds. All green means you qualify for a Substack-endorsed fast-track application.</div>
+
+    <div class="endorsement-panel" style="border-color:#ffe082;">
+      <div class="endorsement-header">
+        <span class="endorsement-title">Platform Endorsement</span>
+        <span class="badge badge-amber">⚠ 3 criteria not yet met</span>
+      </div>
+      <p id="endorse-para-2a" style="font-size:13px;color:#555;margin-bottom:14px;line-height:1.5;">Once all criteria turn green, Substack will attach a signed endorsement to your Stripe India application — targeting a 48-hour invite SLA instead of the standard 2–6 month wait. Keep publishing to close the gaps below.</p>
+
+      <div class="section-label">Your endorsement criteria</div>
+      <table class="criteria-table">
+        <tbody>
+          <tr>
+            <td class="crit-label">Account age</td>
+            <td class="crit-value">180 days
+              <div class="progress-bar-wrap"><div class="progress-bar-fill fill-red" style="width:49%"></div></div>
+            </td>
+            <td class="crit-status"><span class="badge badge-red" style="font-size:11px;">185 days to go</span></td>
+          </tr>
+          <tr>
+            <td class="crit-label" style="padding-left:8px;font-size:11px;color:#aaa;" colspan="3">Threshold: 365 days — 185 days remaining</td>
+          </tr>
+          <tr>
+            <td class="crit-label">Free subscribers</td>
+            <td class="crit-value">320 / 500
+              <div class="progress-bar-wrap"><div class="progress-bar-fill fill-amber" style="width:64%"></div></div>
+            </td>
+            <td class="crit-status"><span class="badge badge-amber" style="font-size:11px;">180 away</span></td>
+          </tr>
+          <tr>
+            <td class="crit-label" style="padding-left:8px;font-size:11px;color:#aaa;" colspan="3">Threshold: 500 subscribers</td>
+          </tr>
+          <tr>
+            <td class="crit-label">Avg. open rate</td>
+            <td class="crit-value">38.5%
+              <div class="progress-bar-wrap"><div class="progress-bar-fill fill-green" style="width:100%"></div></div>
+            </td>
+            <td class="crit-status"><span class="badge badge-green" style="font-size:11px;">✓ Met</span></td>
+          </tr>
+          <tr>
+            <td class="crit-label">Publications</td>
+            <td class="crit-value">8 / 12
+              <div class="progress-bar-wrap"><div class="progress-bar-fill fill-amber" style="width:67%"></div></div>
+            </td>
+            <td class="crit-status"><span class="badge badge-amber" style="font-size:11px;">4 posts away</span></td>
+          </tr>
+          <tr>
+            <td class="crit-label" style="padding-left:8px;font-size:11px;color:#aaa;" colspan="3">Threshold: 12 published posts</td>
+          </tr>
+          <tr>
+            <td class="crit-label">Chargebacks</td>
+            <td class="crit-value">0
+              <div class="progress-bar-wrap"><div class="progress-bar-fill fill-green" style="width:100%"></div></div>
+            </td>
+            <td class="crit-status"><span class="badge badge-green" style="font-size:11px;">✓ Met</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="what-you-can-do">
+      <div class="section-label">What you can do now</div>
+      <div class="wyd-item"><span class="wyd-bullet">→</span><span>Keep publishing — 185 more days of account history gets you to the age threshold.</span></div>
+      <div class="wyd-item"><span class="wyd-bullet">→</span><span>Grow to 500 free subscribers (180 away). Share your pledge link so readers know payouts are coming.</span></div>
+      <div class="wyd-item"><span class="wyd-bullet">→</span><span>Publish 4 more posts to clear the minimum publication count (8 → 12).</span></div>
+      <div class="wyd-item"><span class="wyd-bullet">→</span><span>Start your pledge wall — reader pledges accumulate now and are captured the moment your account is approved.</span></div>
+    </div>
+
+    <div class="info-box amber" style="margin-top:16px;">
+      <strong>Pledge wall fast-track:</strong> If readers pledge $1,000 or more before you formally qualify, we'll flag your application for expedited manual review — even without a full endorsement.
+    </div>
+
+    <div class="info-box blue" id="no-endorse-info-2a" style="margin-top:12px;font-size:12px;">
+      <strong>Without endorsement:</strong> You can still submit to Stripe India's invite queue, but the typical wait is 2–6 months (or indefinitely — there is no public SLA). The endorsement is what Substack is working to change.
+    </div>
+
+    <div class="btn-row" style="margin-top:20px;flex-direction:column;">
+      <button class="btn btn-secondary btn-full" id="no-endorse-btn-2a" onclick="showScenario('4a')">Join Stripe India invite queue without endorsement →</button>
+      <button class="btn btn-outline-orange btn-full" style="margin-top:8px;">Come back when I qualify</button>
+    </div>
+  </div>
+
+  <!-- Pledge wall — still accumulating -->
+  <div class="card">
+    <div class="pledge-title">
+      <div class="live-dot"></div>
+      Reader pledge wall
+    </div>
+    <div class="coin-arena" id="arena-2a">
+      <div class="wallet">👛</div>
+    </div>
+    <div class="pledge-stats">
+      <div class="pledge-stat">
+        <div class="pledge-stat-value" id="pcount-2a">0</div>
+        <div class="pledge-stat-label">readers interested</div>
+      </div>
+    </div>
+    <p style="font-size:12px;color:#777;text-align:center;">Pledges accumulate now, regardless of where you stand on endorsement criteria. They're captured the moment your account is approved.</p>
+  </div>
+
+  <div class="annotation-panel">
+    <div class="annotation-title">Annotations</div>
+    <div class="annotation-item"><span class="annotation-ref">UX</span>This screen is the universal post-submit landing — not a failure state. Creators who fully qualify see all criteria green. Creators with gaps see the specific shortfalls and what to do. Framing is neutral/informational throughout.</div>
+    <div class="annotation-item"><span class="annotation-ref">#302</span>Milestone trigger (reader count threshold) acts as an alternate fast-track signal regardless of endorsement status. Pledge accumulation is never paused.</div>
+    <div class="annotation-item"><span class="annotation-ref">#101</span>Eligibility panel shows exact shortfall counts (180 subscribers, 185 days, 4 posts) and progress bars — not a generic "not qualified" message. Each gap has an actionable suggestion.</div>
+  </div>
+  <div class="footer">
+    <a href="#">Help</a> · <a href="#">Contact support</a>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════
+     SCENARIO 2b — Qualified + Pledge Wall
+════════════════════════════════════ -->
+<div class="shell" id="s-2b">
+  <div class="header">
+    <span class="logo">Substack</span>
+    <span class="logo-sep">|</span>
+    <span class="header-title" id="ht-2b">Set up India payouts</span>
+  </div>
+  <div class="stepper">
+    <div class="step done">
+      <div class="step-circle">✓</div>
+      <div class="step-label">Account</div>
+    </div>
+    <div class="step done">
+      <div class="step-circle">✓</div>
+      <div class="step-label">Identity</div>
+    </div>
+    <div class="step active">
+      <div class="step-circle">3</div>
+      <div class="step-label">Waiting</div>
+    </div>
+    <div class="step">
+      <div class="step-circle">4</div>
+      <div class="step-label">Review</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="confirmed-badge">
+      <span class="icon">✅</span>
+      <span>Identity submitted · KYC-2026-05-24-PRK</span>
+    </div>
+
+    <!-- Endorsement panel -->
+    <div class="endorsement-panel" style="border-color:#b7e4c7;">
+      <div class="endorsement-header">
+        <span class="endorsement-title">Platform Endorsement</span>
+        <span class="badge badge-green">✓ Qualified</span>
+      </div>
+      <table class="criteria-table" style="margin-bottom:10px;">
+        <tbody>
+          <tr>
+            <td class="crit-label">Account age</td>
+            <td class="crit-value">412 days <div class="progress-bar-wrap"><div class="progress-bar-fill fill-green" style="width:100%"></div></div></td>
+            <td class="crit-status"><span class="badge badge-green" style="font-size:11px;">✓</span></td>
+          </tr>
+          <tr>
+            <td class="crit-label">Free subscribers</td>
+            <td class="crit-value">1,240 <div class="progress-bar-wrap"><div class="progress-bar-fill fill-green" style="width:100%"></div></div></td>
+            <td class="crit-status"><span class="badge badge-green" style="font-size:11px;">✓</span></td>
+          </tr>
+          <tr>
+            <td class="crit-label">Avg. open rate</td>
+            <td class="crit-value">38.5% <div class="progress-bar-wrap"><div class="progress-bar-fill fill-green" style="width:100%"></div></div></td>
+            <td class="crit-status"><span class="badge badge-green" style="font-size:11px;">✓</span></td>
+          </tr>
+          <tr>
+            <td class="crit-label">Publications</td>
+            <td class="crit-value">47 <div class="progress-bar-wrap"><div class="progress-bar-fill fill-green" style="width:100%"></div></div></td>
+            <td class="crit-status"><span class="badge badge-green" style="font-size:11px;">✓</span></td>
+          </tr>
+          <tr>
+            <td class="crit-label">Chargebacks</td>
+            <td class="crit-value">0 <div class="progress-bar-wrap"><div class="progress-bar-fill fill-green" style="width:100%"></div></div></td>
+            <td class="crit-status"><span class="badge badge-green" style="font-size:11px;">✓</span></td>
+          </tr>
+        </tbody>
+      </table>
+      <p style="font-size:12px;color:#2ea44f;">Substack will submit a signed endorsement once your bank account is verified. Stripe fast-track target: 48 hours.</p>
+    </div>
+
+    <!-- Penny-drop -->
+    <div class="penny-panel">
+      <div class="penny-panel-title" id="penny-title-2b">
+        <div class="penny-dot"></div>
+        ₹1 test deposit in progress
+      </div>
+      <div class="penny-panel-body">
+        <span id="penny-2b">Sending ₹1 IMPS credit to your HDFC account ending in <strong>…8901</strong> (IFSC: HDFC0001234)</span>. Typically arrives within 2–6 hours. Check your SMS alerts.
+      </div>
+      <button class="btn btn-outline-orange" id="penny-btn-2b" onclick="showScenario('3b')">I've received the ₹1 deposit →</button>
+    </div>
+
+    <div class="info-box blue" style="font-size:12px;">
+      <strong>Note:</strong> The platform endorsement is sent to Stripe only after your bank account is confirmed via penny-drop — not immediately on form submission.
+    </div>
+  </div>
+
+  <!-- Pledge wall card -->
+  <div class="card">
+    <div class="pledge-title">
+      <div class="live-dot"></div>
+      Live pledge wall
+    </div>
+    <div class="coin-arena" id="arena-2b">
+      <div class="wallet">👛</div>
+    </div>
+    <div class="pledge-stats">
+      <div class="pledge-stat">
+        <div class="pledge-stat-value" id="pcount-2b">0</div>
+        <div class="pledge-stat-label">readers interested</div>
+      </div>
+    </div>
+    <div class="share-row">
+      <span class="share-url">substack.com/@priya/pledge</span>
+      <button class="btn btn-secondary" style="padding:5px 12px;font-size:12px;" onclick="var _b=this;_b.textContent='Copied!';setTimeout(function(){_b.textContent='Copy';},1500)">Copy</button>
+    </div>
+    <div class="milestone-wrap">
+      <div class="milestone-label">
+        <span>Milestone progress</span>
+        <span id="milestone-label-2b">0 of 12 readers</span>
+      </div>
+      <div class="milestone-track">
+        <div class="milestone-fill" id="milestone-fill-2b" style="width:0%"></div>
+      </div>
+    </div>
+    <div id="pledger-ticker-2b" class="pledger-ticker"></div>
+  </div>
+
+  <div class="annotation-panel">
+    <div class="annotation-title">Annotations</div>
+    <div class="annotation-item"><span class="annotation-ref">#301</span>Reader interest ledger — intent signals, not payments. The ledger persists through all waiting states and survives bank verify delays.</div>
+    <div class="annotation-item"><span class="annotation-ref">#302</span>Milestone trigger: when pledge total crosses $1,000 the UI transitions to 2c and a cron job elevates the Stripe application to expedited queue.</div>
+    <div class="annotation-item"><span class="annotation-ref">#103</span>Endorsement fires only after penny-drop confirmed (step 3b), not on KYC form submission. This panel reflects the pending state.</div>
+  </div>
+  <div class="footer"><a href="#">Help</a></div>
+</div>
+
+<!-- ════════════════════════════════════
+     SCENARIO 2c — Milestone Hit
+════════════════════════════════════ -->
+<div class="shell" id="s-2c">
+  <div class="header">
+    <span class="logo">Substack</span>
+    <span class="logo-sep">|</span>
+    <span class="header-title" id="ht-2c">Set up India payouts</span>
+  </div>
+  <div class="stepper">
+    <div class="step done"><div class="step-circle">✓</div><div class="step-label">Account</div></div>
+    <div class="step done"><div class="step-circle">✓</div><div class="step-label">Identity</div></div>
+    <div class="step active"><div class="step-circle">3</div><div class="step-label">Waiting</div></div>
+    <div class="step"><div class="step-circle">4</div><div class="step-label">Review</div></div>
+  </div>
+
+  <div class="card">
+    <div class="confirmed-badge">
+      <span class="icon">✅</span>
+      <span>Identity submitted · KYC-2026-05-24-PRK</span>
+    </div>
+
+    <div class="endorsement-panel" style="border-color:#ffd700;background:#fffef5;">
+      <div class="endorsement-header">
+        <span class="endorsement-title">Platform Endorsement</span>
+        <span class="badge badge-gold">✓ Expedited — milestone triggered</span>
+      </div>
+      <p style="font-size:12px;color:#8a6500;line-height:1.5;">Your pledge total has triggered expedited review. Our team will manually fast-track your Stripe application regardless of normal endorsement timing.</p>
+    </div>
+
+    <!-- Milestone banner -->
+    <div class="milestone-banner">
+      <div class="milestone-banner-title">🎉 Milestone reached — strong reader interest signal</div>
+      <div class="milestone-banner-body">Enough readers have expressed interest to trigger expedited review consideration. Our team will manually fast-track your Stripe application regardless of normal endorsement timing.</div>
+    </div>
+
+    <!-- Penny-drop still in progress -->
+    <div class="penny-panel">
+      <div class="penny-panel-title" id="penny-title-2c">
+        <div class="penny-dot"></div>
+        ₹1 test deposit still in progress
+      </div>
+      <div class="penny-panel-body">
+        <span id="penny-2c">Sending ₹1 to your HDFC account ending in <strong>…8901</strong></span>. Bank confirmation pending — your milestone status is noted regardless.
+      </div>
+      <button class="btn btn-outline-orange" id="penny-btn-2c" onclick="showScenario('3b')">I've received the ₹1 deposit →</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="pledge-title">
+      <div class="live-dot"></div>
+      Pledge wall — milestone reached!
+    </div>
+    <div class="coin-arena" id="arena-2c" style="background:linear-gradient(180deg,#fffbe6,#fff8dc);">
+      <div class="wallet">👛</div>
+    </div>
+    <div class="pledge-stats">
+      <div class="pledge-stat">
+        <div class="pledge-stat-value" style="color:#b8860b;">18</div>
+        <div class="pledge-stat-label">readers interested</div>
+      </div>
+    </div>
+    <div class="milestone-wrap">
+      <div class="milestone-label">
+        <span>Milestone progress</span>
+        <span style="color:#b8860b;font-weight:700;">18 of 12 readers — ACHIEVED 🎉</span>
+      </div>
+      <div class="milestone-track">
+        <div class="milestone-fill complete" style="width:100%"></div>
+      </div>
+    </div>
+    <div class="pledger-ticker" id="static-pledgers-2c" style="font-size:12px;">
+      <div class="pledger-item"><div class="pledger-avatar" style="background:#ff6719">A</div><span class="pledger-name">Arjun Mehta</span><span class="pledger-amount">interested</span><span class="pledger-time">now</span></div>
+      <div class="pledger-item"><div class="pledger-avatar" style="background:#0066cc">S</div><span class="pledger-name">Sneha Krishnan</span><span class="pledger-amount">interested</span><span class="pledger-time">1m ago</span></div>
+      <div class="pledger-item"><div class="pledger-avatar" style="background:#2ea44f">R</div><span class="pledger-name">Rahul Verma</span><span class="pledger-amount">interested</span><span class="pledger-time">3m ago</span></div>
+      <div class="pledger-item"><div class="pledger-avatar" style="background:#9b59b6">P</div><span class="pledger-name">Pallavi Nair</span><span class="pledger-amount">interested</span><span class="pledger-time">5m ago</span></div>
+    </div>
+  </div>
+
+  <div class="annotation-panel">
+    <div class="annotation-title">Annotations</div>
+    <div class="annotation-item"><span class="annotation-ref">#302</span>Cron-triggered milestone elevation: when pledge ledger crosses $1,000, a background job elevates the Stripe application priority and updates the endorsement status chip to "Expedited".</div>
+    <div class="annotation-item"><span class="annotation-ref">#301</span>Reader interest count is used as a demand signal in Stripe application triage — not a revenue figure. No amounts are shown anywhere on the pledge wall. No reader has been charged at this stage.</div>
+  </div>
+  <div class="footer"><a href="#">Help</a></div>
+</div>
+
+<!-- ════════════════════════════════════
+     SCENARIO 3a — Penny-drop Timeout
+════════════════════════════════════ -->
+<div class="shell" id="s-3a">
+  <div class="header">
+    <span class="logo">Substack</span>
+    <span class="logo-sep">|</span>
+    <span class="header-title" id="ht-3a">Set up India payouts</span>
+  </div>
+  <div class="stepper">
+    <div class="step done"><div class="step-circle">✓</div><div class="step-label">Account</div></div>
+    <div class="step done"><div class="step-circle">✓</div><div class="step-label">Identity</div></div>
+    <div class="step active"><div class="step-circle">3</div><div class="step-label">Waiting</div></div>
+    <div class="step"><div class="step-circle">4</div><div class="step-label">Review</div></div>
+  </div>
+
+  <div class="card" style="border-color:#ffe082;">
+    <div class="info-box amber" style="margin-bottom:0;border-radius:8px 8px 0 0;border:none;background:transparent;padding:0 0 14px 0;">
+      <strong style="font-size:16px;" id="deposit-banner-3a">⏱ ₹1 deposit not confirmed — 48 hours elapsed</strong>
+    </div>
+    <div class="card-subtitle" style="margin-bottom:20px;">
+      We sent <span id="bank-3a">₹1 to your HDFC account ending in <strong>…8901</strong> (HDFC0001234)</span> 48 hours ago. If you haven't seen it, something may have gone wrong with the transfer.
+    </div>
+
+    <div class="section-label">Choose what to do next</div>
+    <div class="option-cards">
+      <div class="option-card" onclick="showScenario('3b')">
+        <div class="option-card-title" style="color:#2ea44f;">✓ I did receive it — confirm now</div>
+        <div class="option-card-body" id="confirm-body-3a">If the ₹1 appeared in your account, click here to confirm and proceed to Stripe review.</div>
+      </div>
+      <div class="option-card" onclick="showScenario('1a')">
+        <div class="option-card-title" style="color:#0066cc;">✎ Re-enter bank details</div>
+        <div class="option-card-body" id="reenter-body-3a">If you entered the wrong account number or IFSC, go back and correct them. We'll send a new ₹1 test deposit.</div>
+      </div>
+      <div class="option-card" id="bank-rejection-card" onclick="toggleBankRejection()">
+        <div class="option-card-title" style="color:#d73a49;">✗ My bank rejected it</div>
+        <div class="option-card-body" id="bank-rejection-body">Some banks reject IMPS credits. Click to learn more and get alternatives.</div>
+        <div id="bank-rejection-detail" style="display:none;margin-top:12px;padding-top:12px;border-top:1px solid #f0f0f0;">
+          <div class="info-box amber" id="bank-rejection-help" style="margin-bottom:0;font-size:12px;">
+            <strong>Why some banks reject IMPS credits:</strong> Cooperative banks, small finance banks, and some regional rural banks reject inward IMPS credits when the account holder name doesn't exactly match the sender's records. This is a known issue with NPCI's name-matching rules.<br><br>
+            <strong>Try a nationalised bank account:</strong> SBI, HDFC, ICICI, Axis, or Kotak accounts have the highest success rate with IMPS credits from Stripe's payment rails.<br><br>
+            <strong>Or contact support</strong> — our India team can investigate the specific IMPS trace ID for your transfer.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top:16px;text-align:center;font-size:12px;color:#777;">
+      Still stuck? <a href="#" style="color:#0066cc;" id="support-link-3a">Contact India support →</a>
+    </div>
+  </div>
+
+  <!-- Pledge wall still accumulating -->
+  <div class="card">
+    <div class="pledge-title">
+      <div class="live-dot"></div>
+      Pledge wall — still accumulating
+    </div>
+    <div class="coin-arena" id="arena-3a">
+      <div class="wallet">👛</div>
+    </div>
+    <div class="pledge-stats">
+      <div class="pledge-stat"><div class="pledge-stat-value" id="pcount-3a">0</div><div class="pledge-stat-label">readers interested</div></div>
+    </div>
+    <p style="font-size:12px;color:#777;text-align:center;margin-top:8px;">The bank verification timeout does not affect your pledge ledger. Pledges continue accumulating.</p>
+  </div>
+
+  <div class="annotation-panel">
+    <div class="annotation-title">Annotations</div>
+    <div class="annotation-item"><span class="annotation-ref">#101</span>Penny-drop is the only reliable mechanism to confirm bank account ownership for FEMA compliance — it cannot be skipped or substituted with a voided cheque upload alone.</div>
+    <div class="annotation-item"><span class="annotation-ref">R6</span>Risk: penny-drop delays are the most common failure point. Three distinct recovery paths are provided: confirm receipt, re-enter details, or escalate bank rejection — not just a single "contact support" dead-end.</div>
+    <div class="annotation-item"><span class="annotation-ref">#301</span>Pledge wall continues accumulating through all failure states. The timeout does not pause or reset the pledge ledger.</div>
+  </div>
+  <div class="footer"><a href="#" id="footer-3a">India support</a></div>
+</div>
+
+<!-- ════════════════════════════════════
+     SCENARIO 3b — Penny-drop Confirmed
+════════════════════════════════════ -->
+<div class="shell" id="s-3b">
+  <div class="header">
+    <span class="logo">Substack</span>
+    <span class="logo-sep">|</span>
+    <span class="header-title" id="ht-3b">Set up India payouts</span>
+  </div>
+  <div class="stepper">
+    <div class="step done"><div class="step-circle">✓</div><div class="step-label">Account</div></div>
+    <div class="step done"><div class="step-circle">✓</div><div class="step-label">Identity</div></div>
+    <div class="step active"><div class="step-circle">3</div><div class="step-label">Waiting</div></div>
+    <div class="step"><div class="step-circle">4</div><div class="step-label">Review</div></div>
+  </div>
+
+  <div class="card" style="text-align:center;padding:40px 32px;">
+    <div style="font-size:56px;margin-bottom:12px;" id="confirm-anim-3b">✅</div>
+    <div class="card-title">Bank account verified</div>
+    <div class="card-subtitle" id="bank-3b-sub">Your HDFC account ending in <strong>…8901</strong> is confirmed. We're now packaging your platform endorsement and submitting it to Stripe.</div>
+
+    <div class="progress-steps" style="text-align:left;max-width:340px;margin:24px auto;">
+      <div class="progress-step">
+        <div class="ps-icon done">✓</div>
+        <span>Identity verified</span>
+      </div>
+      <div class="progress-step">
+        <div class="ps-icon done">✓</div>
+        <span id="bank-3b-step">Bank account confirmed (HDFC …8901)</span>
+      </div>
+      <div class="progress-step">
+        <div class="ps-icon spin">⟳</div>
+        <span>Submitting endorsement bundle to Stripe…</span>
+      </div>
+    </div>
+
+    <p style="font-size:13px;color:#777;margin-bottom:20px;">This usually takes less than a minute. You'll get an email when Stripe confirms receipt.</p>
+    <button class="btn btn-primary" onclick="showScenario('4a')" id="advance-3b">→ Stripe review (fast-track)</button>
+  </div>
+
+  <div class="card">
+    <div class="pledge-title" style="margin-bottom:8px;">
+      <div class="live-dot"></div>
+      Your pledges are safe
+    </div>
+    <p style="font-size:13px;color:#555;line-height:1.5;">Readers who expressed interest will be the first to know when you go live. Pledges are a signal of intent — no one has been charged. Pledges continue accumulating.</p>
+    <div class="pledge-stats" style="margin-top:12px;">
+      <div class="pledge-stat"><div class="pledge-stat-value">18</div><div class="pledge-stat-label">readers pledged</div></div>
+      <div class="pledge-stat"><div class="pledge-stat-value">18</div><div class="pledge-stat-label">readers interested</div></div>
+    </div>
+  </div>
+
+  <div class="annotation-panel">
+    <div class="annotation-title">Annotations</div>
+    <div class="annotation-item"><span class="annotation-ref">#103</span>Endorsement bundle submission triggers here — on penny-drop confirmation — not on KYC form submit. The bundle includes: PAN details, platform eligibility scores, pledge ledger snapshot, and Substack's signed endorsement.</div>
+  </div>
+  <div class="footer"><a href="#">Help</a></div>
+</div>
+
+<!-- ════════════════════════════════════
+     SCENARIO 4a — Waiting for Stripe India Invite
+════════════════════════════════════ -->
+<div class="shell" id="s-4a">
+  <div class="header">
+    <span class="logo">Substack</span>
+    <span class="logo-sep">|</span>
+    <span class="header-title" id="ht-4a">Set up India payouts</span>
+  </div>
+  <div class="stepper">
+    <div class="step done"><div class="step-circle">✓</div><div class="step-label">Account</div></div>
+    <div class="step done"><div class="step-circle">✓</div><div class="step-label">Identity</div></div>
+    <div class="step done"><div class="step-circle">✓</div><div class="step-label">Waiting</div></div>
+    <div class="step active"><div class="step-circle">4</div><div class="step-label">Invite</div></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title" id="card-title-4a">Waiting for Stripe India invite</div>
+    <div class="card-subtitle" id="card-sub-4a">Stripe India operates on an invite-only model due to RBI regulatory requirements. Your application is in the queue — here's exactly where it stands.</div>
+
+    <!-- Invite queue status -->
+    <div class="info-box blue" id="why-invite-4a" style="margin-bottom:20px;">
+      <strong>Why invite-only?</strong> The Reserve Bank of India requires Stripe India to verify and approve each merchant individually before they can receive international inward remittances. Stripe cannot open accounts to all applicants simultaneously — invitations are issued in batches as RBI compliance slots become available.
+    </div>
+
+    <!-- Current queue position -->
+    <div class="endorsement-panel" style="border-color:#b3d1ff;background:#f0f6ff;">
+      <div class="endorsement-header">
+        <span class="endorsement-title">Your queue position</span>
+        <span class="badge badge-blue">⏳ In invite queue</span>
+      </div>
+      <table class="criteria-table" style="margin-bottom:10px;">
+        <tbody>
+          <tr>
+            <td class="crit-label">Application submitted</td>
+            <td class="crit-value" style="text-align:right;font-weight:600;">24 May 2026, 10:06 AM IST</td>
+          </tr>
+          <tr>
+            <td class="crit-label">Platform endorsement</td>
+            <td class="crit-value" style="text-align:right;"><span class="badge badge-green" style="font-size:11px;">✓ Attached</span></td>
+          </tr>
+          <tr>
+            <td class="crit-label">Queue stage</td>
+            <td class="crit-value" style="text-align:right;font-weight:600;">Compliance pre-screening</td>
+          </tr>
+          <tr>
+            <td class="crit-label">Estimated invite</td>
+            <td class="crit-value" style="text-align:right;font-weight:600;color:#0066cc;">Targeting 48 hrs (see note)</td>
+          </tr>
+        </tbody>
+      </table>
+      <p id="no-endorse-box-4a" style="font-size:12px;color:#003380;line-height:1.5;padding-top:8px;border-top:1px solid #d0e4ff;">
+        <strong>Note — this is a proposed improvement, not yet live.</strong> Without Substack's endorsement, the typical Stripe India invite wait is 2–6 months — or indefinitely, as there is no public SLA. The 48-hour target is what Substack's India team is actively negotiating with Stripe BD as a committed SLA for endorsed creators. This screen reflects what the proposal would look like once in place.
+      </p>
+    </div>
+
+    <!-- Timeline -->
+    <div class="timeline">
+      <div class="timeline-item done">
+        <div class="tl-icon done">✓</div>
+        <div class="tl-body">
+          <div class="tl-title">Identity &amp; bank verified</div>
+          <div class="tl-sub">24 May 2026, 10:05 AM IST</div>
+        </div>
+      </div>
+      <div class="timeline-item done">
+        <div class="tl-icon done">✓</div>
+        <div class="tl-body">
+          <div class="tl-title" id="tl-submit-4a">Platform endorsement submitted to Stripe India</div>
+          <div class="tl-sub" id="tl-sub2-4a">24 May 2026, 10:06 AM IST · includes PAN, eligibility scores, pledge ledger snapshot</div>
+        </div>
+      </div>
+      <div class="timeline-item done">
+        <div class="tl-icon done">✓</div>
+        <div class="tl-body">
+          <div class="tl-title" id="tl-received-4a">Application received by Stripe India compliance</div>
+          <div class="tl-sub">24 May 2026, 10:07 AM IST</div>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="tl-icon active"></div>
+        <div class="tl-body">
+          <div class="tl-title" id="tl-invite-4a">Stripe India invite issuance</div>
+          <div class="tl-sub">Target: within 48 hours (endorsed) · Without endorsement: 2–6 months, no guarantee</div>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="tl-icon grey">○</div>
+        <div class="tl-body">
+          <div class="tl-title" style="color:#aaa;">Account activation &amp; first payout</div>
+          <div class="tl-sub">After invite accepted and final KYC cleared</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- What to do while waiting -->
+    <div class="section-label">What you can do while waiting</div>
+    <div class="what-you-can-do">
+      <div class="wyd-item"><span class="wyd-bullet">→</span><span>Share your pledge link — reader pledges accumulate now and are captured the moment your account goes live. Every pledge signals demand to Stripe.</span></div>
+      <div class="wyd-item"><span class="wyd-bullet">→</span><span>Keep publishing. A higher open rate and subscriber count strengthens your file if Stripe requests additional review.</span></div>
+      <div class="wyd-item"><span class="wyd-bullet">→</span><span id="wyd-docs-4a">Watch your email — Stripe may request additional documents (passport, Aadhaar, address proof). Respond within 48 hours to avoid losing your queue position.</span></div>
+      <div class="wyd-item"><span class="wyd-bullet">→</span><span>You will not be charged anything during this process.</span></div>
+    </div>
+
+    <!-- Substack India BD note -->
+    <div class="info-box orange" style="margin-top:16px;" id="bd-note-4a">
+      <strong>What Substack is doing:</strong> Substack's India team is in active discussions with Stripe BD to commit the 48-hour invite SLA for endorsed creators. This is not yet a live arrangement — it is the outcome this proposal is designed to secure. Updates will appear here as the commercial agreement progresses.
+    </div>
+
+    <!-- Email preview of what a Stripe invite looks like -->
+    <div class="email-preview" style="margin-top:16px;">
+      <div class="email-from">From: noreply@stripe.com · <em style="color:#aaa;">This is what the invite email will look like</em></div>
+      <div class="email-subject" id="email-subject-4a">Your Stripe India account is ready to activate</div>
+      <div class="email-body">
+        Dear <span id="creator-name-4a">Priya</span>,<br><br>
+        You've been invited to activate your <span id="email-processor-4a">Stripe India</span> payout account. This invitation was issued on the basis of Substack's platform endorsement.<br><br>
+        To complete activation, please:<br>
+        • Confirm your <span id="email-taxid-4a">PAN</span> and legal name match your records<br>
+        • Upload one government-issued ID (<span id="email-iddocs-4a">passport or Aadhaar</span>)<br>
+        • Confirm your <span id="bank-4a">bank account (HDFC …8901)</span> for payouts<br><br>
+        Your invitation expires in 7 days. Please complete the steps above to secure your account.<br><br>
+        — <span id="email-sig-4a">Stripe Compliance Team, India</span>
+      </div>
+    </div>
+
+    <div style="margin-top:20px;text-align:right;">
+      <button class="btn btn-outline-red" style="margin-right:8px;" onclick="showScenario('4b')">→ Demo: Rejection state</button>
+      <button class="btn btn-green" onclick="showScenario('5a')">→ Demo: Activation</button>
+    </div>
+  </div>
+
+  <!-- Pledge wall -->
+  <div class="card">
+    <div class="pledge-title"><div class="live-dot"></div>Pledge wall — accumulating while you wait</div>
+    <div class="pledge-stats">
+      <div class="pledge-stat"><div class="pledge-stat-value">18</div><div class="pledge-stat-label">readers pledged</div></div>
+      <div class="pledge-stat"><div class="pledge-stat-value">18</div><div class="pledge-stat-label">readers interested</div></div>
+    </div>
+    <div class="share-row" style="margin-top:12px;">
+      <span class="share-url">substack.com/@<span id="handle-4a">priya</span>/pledge</span>
+      <button class="btn btn-secondary" style="padding:5px 12px;font-size:12px;" onclick="var _b=this;_b.textContent='Copied!';setTimeout(function(){_b.textContent='Copy';},1500)">Copy</button>
+    </div>
+    <p id="pledge-note-4a" style="font-size:12px;color:#777;text-align:center;margin-top:8px;">Share your pledge link while you wait. Pledges are captured the moment your Stripe India invite is accepted and your account activates.</p>
+  </div>
+
+  <div class="annotation-panel">
+    <div class="annotation-title">Annotations</div>
+    <div class="annotation-item"><span class="annotation-ref">R1</span>Stripe India is invite-only due to RBI requirements — this is not a generic "in review" state. The distinction matters: there is no public queue SLA today. The 48-hour target is the outcome being negotiated, not a current guarantee.</div>
+    <div class="annotation-item"><span class="annotation-ref">#103</span>Platform endorsement bundle submitted here includes: PAN, eligibility scores, pledge ledger snapshot, and Substack's signed letter. This is the lever Substack holds in the BD negotiation with Stripe.</div>
+    <div class="annotation-item"><span class="annotation-ref">R2</span>Risk: the 48-hour SLA is not yet committed by Stripe. Without it, the endorsed path has the same indeterminate wait as unendorsed. Substack India team is the active party pursuing this commitment.</div>
+    <div class="annotation-item"><span class="annotation-ref">#301</span>Pledge wall continues accumulating through all wait states. The invite queue delay does not pause or reset the pledge ledger.</div>
+  </div>
+  <div class="footer"><a href="#">Help</a> · <a href="#" id="footer-4a">India support</a></div>
+</div>
+
+<!-- ════════════════════════════════════
+     SCENARIO 4b — Stripe Rejected
+════════════════════════════════════ -->
+<div class="shell" id="s-4b">
+  <div class="header">
+    <span class="logo">Substack</span>
+    <span class="logo-sep">|</span>
+    <span class="header-title" id="ht-4b">Set up India payouts</span>
+  </div>
+  <div class="stepper">
+    <div class="step done"><div class="step-circle">✓</div><div class="step-label">Account</div></div>
+    <div class="step done"><div class="step-circle">✓</div><div class="step-label">Identity</div></div>
+    <div class="step done"><div class="step-circle">✓</div><div class="step-label">Waiting</div></div>
+    <div class="step error"><div class="step-circle">✗</div><div class="step-label">Review</div></div>
+  </div>
+
+  <div class="card" style="border-color:#d73a49;">
+    <div class="error-banner" style="margin-bottom:20px;">
+      <span style="font-size:20px;flex-shrink:0;">✗</span>
+      <div>
+        <strong>Stripe was unable to approve your account</strong><br>
+        <span style="font-weight:normal;">Reason disclosed: Unable to verify identity documents against PAN records.</span>
+      </div>
+    </div>
+
+    <div class="section-label">What this means</div>
+    <p id="fail-explain-4b" style="font-size:13px;color:#555;line-height:1.6;margin-bottom:16px;">
+      Stripe's compliance team couldn't match your submitted PAN to their third-party identity verification system. This is usually caused by a name spelling mismatch — for example, if your PAN card says "PRIYA RAGHUNATHAN" but you entered "Priya Raghunathan Sharma" — or a recently issued PAN that hasn't propagated to verification databases yet.
+    </p>
+
+    <div class="timeline" style="margin-bottom:20px;">
+      <div class="timeline-item done">
+        <div class="tl-icon done">✓</div>
+        <div class="tl-body"><div class="tl-title">Platform endorsement submitted</div><div class="tl-sub">24 May 2026, 10:06 AM IST</div></div>
+      </div>
+      <div class="timeline-item done">
+        <div class="tl-icon done">✓</div>
+        <div class="tl-body"><div class="tl-title" id="tl-received-4b">Received by Stripe India compliance</div><div class="tl-sub">24 May 2026, 10:07 AM IST</div></div>
+      </div>
+      <div class="timeline-item">
+        <div class="tl-icon fail">✗</div>
+        <div class="tl-body">
+          <div class="tl-title" style="color:#d73a49;">Identity verification failed</div>
+          <div class="tl-sub" id="tl-fail-4b">PAN-to-name match failed in Stripe's verification system</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-label">Your options</div>
+    <div class="option-cards">
+      <div class="option-card" onclick="alert('Support ticket flow — opens help.substack.com/stripe-india')">
+        <div class="option-card-title">📋 Request a manual review</div>
+        <div class="option-card-body" id="option-docs-4b">File a support ticket with additional documents: passport, Aadhaar (front + back), and a bank statement showing your PAN. Manual review takes 5–7 business days.</div>
+      </div>
+      <div class="option-card" onclick="showScenario('1a')">
+        <div class="option-card-title">✎ Re-submit with corrected details</div>
+        <div class="option-card-body" id="option-resubmit-4b">Go back to the form and correct your legal name to match <em>exactly</em> as printed on your PAN card — including spacing and spelling. Common fix for most rejections.</div>
+      </div>
+      <div class="option-card" onclick="alert('Opens Substack India support chat')">
+        <div class="option-card-title">💬 Contact Substack support</div>
+        <div class="option-card-body" id="substack-team-4b">Substack's India team can advocate with Stripe's BD team. Useful if you've re-submitted and are still rejected, or if your PAN was recently issued.</div>
+      </div>
+    </div>
+
+    <div class="info-box orange" style="margin-top:16px;">
+      <strong>Your pledge wall is safe.</strong> Readers who expressed interest are still recorded and will be the first to know once your account is approved — whether through re-submission or manual review. Interest signals do not expire.
+    </div>
+  </div>
+
+  <!-- Pledge wall still accumulating -->
+  <div class="card">
+    <div class="pledge-title"><div class="live-dot"></div>Pledge wall — still accumulating</div>
+    <div class="pledge-stats">
+      <div class="pledge-stat"><div class="pledge-stat-value">18</div><div class="pledge-stat-label">readers pledged</div></div>
+      <div class="pledge-stat"><div class="pledge-stat-value">18</div><div class="pledge-stat-label">readers interested</div></div>
+    </div>
+    <p style="font-size:12px;color:#777;text-align:center;margin-top:8px;">Rejection does not affect the pledge ledger. New pledges continue to be accepted.</p>
+  </div>
+
+  <div class="annotation-panel">
+    <div class="annotation-title">Annotations</div>
+    <div class="annotation-item"><span class="annotation-ref">R3</span>Risk: Stripe India may require raw PAN data submitted via their API rather than a PDF attestation. This screen represents the outcome when Stripe's third-party PAN lookup (NSDL/UTI) fails to match.</div>
+    <div class="annotation-item"><span class="annotation-ref">R2</span>Risk: Name mismatch between PAN records and bank account records is the most common rejection cause for Indian creators. The error message identifies this specifically and offers a targeted fix (re-enter name exactly as on PAN card).</div>
+    <div class="annotation-item"><span class="annotation-ref">#301</span>Pledge ledger persists through Stripe rejection. New reader pledges continue to be accepted and held. The ledger transitions to captured revenue only on approval.</div>
+  </div>
+  <div class="footer"><a href="#" id="footer-4b">India support</a></div>
+</div>
+
+<!-- ════════════════════════════════════
+     SCENARIO 5a — Activated
+════════════════════════════════════ -->
+<div class="shell" id="s-5a">
+  <div class="header">
+    <span class="logo">Substack</span>
+    <span class="logo-sep">|</span>
+    <span class="header-title" id="ht-5a">India payouts — account live</span>
+  </div>
+  <div class="stepper">
+    <div class="step done"><div class="step-circle">✓</div><div class="step-label">Account</div></div>
+    <div class="step done"><div class="step-circle">✓</div><div class="step-label">Identity</div></div>
+    <div class="step done"><div class="step-circle">✓</div><div class="step-label">Waiting</div></div>
+    <div class="step done"><div class="step-circle">✓</div><div class="step-label">Active</div></div>
+  </div>
+
+  <div class="card activation-card">
+    <div class="coin-arena" id="arena-5a" style="margin-bottom:20px;height:140px;background:linear-gradient(180deg,#f0fff4,#e6f4ea);">
+      <div class="wallet" style="font-size:48px;position:relative;z-index:1;">🏦</div>
+    </div>
+    <div class="activation-title">Your payout account is live</div>
+    <div class="activation-subtitle" id="bank-5a-sub">Your Stripe India account is approved and linked to HDFC (…8901). International subscriptions can now settle in India.</div>
+
+    <div class="stats-grid" style="margin-top:16px;">
+      <div class="stat-cell">
+        <div class="stat-cell-label">Account status</div>
+        <div class="stat-cell-value" style="color:#2ea44f;font-size:13px;">Active</div>
+      </div>
+      <div class="stat-cell">
+        <div class="stat-cell-label">Readers pledged</div>
+        <div class="stat-cell-value">18</div>
+      </div>
+      <div class="stat-cell">
+        <div class="stat-cell-label">Purpose code</div>
+        <div class="stat-cell-value" style="font-size:12px;" id="purpose-code-5a">P1101</div>
+      </div>
+      <div class="stat-cell">
+        <div class="stat-cell-label">Collected so far</div>
+        <div class="stat-cell-value" style="color:#aaa;">$0</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Next steps -->
+  <div class="card">
+    <div class="section-label" style="text-align:left;margin-bottom:12px;">Next steps to receive your first payout</div>
+    <div class="checklist">
+      <div class="checklist-item"><span class="cl-icon">✅</span><span class="cl-text done" id="approve-check-5a">Stripe India payout account approved</span></div>
+      <div class="checklist-item"><span class="cl-icon">✅</span><span class="cl-text done" id="bank-5a-check">Bank account linked — HDFC (…8901)</span></div>
+      <div class="checklist-item" style="background:#fff8f0;border-left:3px solid #ff6719;padding:10px 12px;border-radius:6px;margin-bottom:8px;">
+        <span class="cl-icon">1</span>
+        <span class="cl-text"><strong>Set your subscription price.</strong> No readers are being charged yet — payouts only happen after you publish paid pricing and readers actively subscribe.<br><a href="#" style="color:#ff6719;font-weight:600;font-size:13px;">Set pricing →</a></span>
+      </div>
+      <div class="checklist-item" style="background:#f0f7ff;border-left:3px solid #0066cc;padding:10px 12px;border-radius:6px;margin-bottom:8px;">
+        <span class="cl-icon">2</span>
+        <span class="cl-text"><strong>Reach out to your 18 pledge readers.</strong> They expressed interest but have not paid anything. They are your warmest leads — send an announcement the moment pricing is live.<br><a href="#" style="color:#0066cc;font-weight:600;font-size:13px;">Send announcement →</a></span>
+      </div>
+      <div class="checklist-item">
+        <span class="cl-icon">📄</span>
+        <span class="cl-text" style="font-size:13px;" id="bank-5a-firc">After your first payout settles, your bank (HDFC) will issue a <strong>FIRC</strong> (Foreign Inward Remittance Certificate). This is issued by your bank, not Substack. Keep it for any GST LUT claims.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Pledge summary — intent only -->
+  <div class="card">
+    <div class="pledge-title" style="margin-bottom:4px;">
+      <div class="live-dot" style="background:#0066cc;"></div>
+      Pledge wall — reader interest recorded
+    </div>
+    <p style="font-size:12px;color:#888;margin-bottom:12px;"><strong>These readers have not been charged.</strong> A pledge is an expression of intent, not a payment. Actual charges happen only after you set pricing and a reader subscribes.</p>
+    <div class="pledge-stats">
+      <div class="pledge-stat"><div class="pledge-stat-value" style="color:#0066cc;">18</div><div class="pledge-stat-label">readers pledged interest</div></div>
+      <div class="pledge-stat"><div class="pledge-stat-value" style="color:#aaa;">$0</div><div class="pledge-stat-label">collected</div></div>
+      <div class="pledge-stat"><div class="pledge-stat-value" style="color:#aaa;">$0</div><div class="pledge-stat-label">collected</div></div>
+    </div>
+    <div id="cap-ticker-5a" class="pledger-ticker" style="font-size:12px;margin-top:8px;"></div>
+  </div>
+
+  <div class="annotation-panel">
+    <div class="annotation-title">Annotations</div>
+    <div class="annotation-item"><span class="annotation-ref">#301</span>Reader interest ledger — intent signals only. No amounts shown anywhere on pledge wall. The count of interested readers is used as a demand signal; it is not a receivable and no reader has been charged.</div>
+    <div class="annotation-item"><span class="annotation-ref">Payout timing</span>First payout date is unknown until the creator sets subscription pricing and at least one reader subscribes and pays. No estimated date is shown — showing one would be misleading at this stage.</div>
+    <div class="annotation-item"><span class="annotation-ref">FIRC</span>Generated by the creator's AD-I bank after inward remittance settles. Not generated by Substack or Stripe. Only relevant once subscription revenue flows.</div>
+  </div>
+  <div class="footer"><a href="#">Help</a> · <a href="#">Subscription settings</a></div>
+</div>
+
+<script>
+// ── Pledger data — country-specific name pools ──
+var PLEDGERS_BY_COUNTRY = {
+  IN: [
+    { name: 'Arjun Mehta', color: '#ff6719' },
+    { name: 'Sneha Krishnan', color: '#0066cc' },
+    { name: 'Rahul Verma', color: '#2ea44f' },
+    { name: 'Pallavi Nair', color: '#9b59b6' },
+    { name: 'Vikram Iyer', color: '#e67e22' },
+    { name: 'Ananya Das', color: '#e74c3c' },
+    { name: 'Rohan Sharma', color: '#1abc9c' },
+    { name: 'Deepika Patel', color: '#3498db' },
+    { name: 'Karthik Rajan', color: '#8e44ad' },
+    { name: 'Priyanka Bose', color: '#d35400' },
+    { name: 'Aditya Kumar', color: '#27ae60' },
+    { name: 'Meera Subramanian', color: '#2980b9' },
+    { name: 'Suresh Babu', color: '#16a085' },
+    { name: 'Kavya Reddy', color: '#8e44ad' },
+    { name: 'Nikhil Joshi', color: '#f39c12' },
+    { name: 'Tanvi Kapoor', color: '#c0392b' },
+    { name: 'Ajay Malhotra', color: '#2c3e50' },
+    { name: 'Ritu Singh', color: '#7f8c8d' },
+  ],
+  ID: [
+    { name: 'Budi Santoso', color: '#ff6719' },
+    { name: 'Sari Dewi', color: '#0066cc' },
+    { name: 'Agus Prasetyo', color: '#2ea44f' },
+    { name: 'Rina Kusuma', color: '#9b59b6' },
+    { name: 'Hendra Wijaya', color: '#e67e22' },
+    { name: 'Dewi Rahayu', color: '#e74c3c' },
+    { name: 'Eko Saputra', color: '#1abc9c' },
+    { name: 'Lestari Putri', color: '#3498db' },
+    { name: 'Bambang Setiawan', color: '#8e44ad' },
+    { name: 'Wulan Sari', color: '#d35400' },
+    { name: 'Andika Nugroho', color: '#27ae60' },
+    { name: 'Fitri Handayani', color: '#2980b9' },
+    { name: 'Rizky Pratama', color: '#16a085' },
+    { name: 'Novia Susanti', color: '#f39c12' },
+    { name: 'Deni Kurniawan', color: '#c0392b' },
+    { name: 'Ayu Lestari', color: '#2c3e50' },
+    { name: 'Wahyu Hidayat', color: '#7f8c8d' },
+    { name: 'Indah Permata', color: '#8e44ad' },
+  ],
+  BR: [
+    { name: 'João Silva', color: '#ff6719' },
+    { name: 'Ana Oliveira', color: '#0066cc' },
+    { name: 'Carlos Pereira', color: '#2ea44f' },
+    { name: 'Fernanda Costa', color: '#9b59b6' },
+    { name: 'Pedro Almeida', color: '#e67e22' },
+    { name: 'Juliana Santos', color: '#e74c3c' },
+    { name: 'Rodrigo Lima', color: '#1abc9c' },
+    { name: 'Camila Ferreira', color: '#3498db' },
+    { name: 'Leonardo Rodrigues', color: '#8e44ad' },
+    { name: 'Larissa Barbosa', color: '#d35400' },
+    { name: 'Gustavo Souza', color: '#27ae60' },
+    { name: 'Mariana Ribeiro', color: '#2980b9' },
+    { name: 'Felipe Carvalho', color: '#16a085' },
+    { name: 'Beatriz Gomes', color: '#f39c12' },
+    { name: 'Rafael Mendes', color: '#c0392b' },
+    { name: 'Lívia Nascimento', color: '#2c3e50' },
+    { name: 'André Araújo', color: '#7f8c8d' },
+    { name: 'Isabela Moura', color: '#8e44ad' },
+  ],
+  MX: [
+    { name: 'Carlos García', color: '#ff6719' },
+    { name: 'María López', color: '#0066cc' },
+    { name: 'Juan Martínez', color: '#2ea44f' },
+    { name: 'Sofía Hernández', color: '#9b59b6' },
+    { name: 'Miguel González', color: '#e67e22' },
+    { name: 'Valentina Ramírez', color: '#e74c3c' },
+    { name: 'Diego Flores', color: '#1abc9c' },
+    { name: 'Isabella Torres', color: '#3498db' },
+    { name: 'Alejandro Reyes', color: '#8e44ad' },
+    { name: 'Daniela Cruz', color: '#d35400' },
+    { name: 'Pablo Moreno', color: '#27ae60' },
+    { name: 'Andrea Vásquez', color: '#2980b9' },
+    { name: 'Jorge Castillo', color: '#16a085' },
+    { name: 'Camila Ruiz', color: '#f39c12' },
+    { name: 'Emiliano Guerrero', color: '#c0392b' },
+    { name: 'Paola Jiménez', color: '#2c3e50' },
+    { name: 'Óscar Mendoza', color: '#7f8c8d' },
+    { name: 'Lucía Ortega', color: '#8e44ad' },
+  ],
+  CO: [
+    { name: 'Sebastián Castro', color: '#ff6719' },
+    { name: 'Valentina Jiménez', color: '#0066cc' },
+    { name: 'Andrés Vargas', color: '#2ea44f' },
+    { name: 'María Romero', color: '#9b59b6' },
+    { name: 'Diego Suárez', color: '#e67e22' },
+    { name: 'Laura Gómez', color: '#e74c3c' },
+    { name: 'Felipe Ramos', color: '#1abc9c' },
+    { name: 'Camila Sánchez', color: '#3498db' },
+    { name: 'Nicolás Mora', color: '#8e44ad' },
+    { name: 'Isabella Díaz', color: '#d35400' },
+    { name: 'Santiago Guerrero', color: '#27ae60' },
+    { name: 'Mariana Ortiz', color: '#2980b9' },
+    { name: 'Julián Peña', color: '#16a085' },
+    { name: 'Sara Rueda', color: '#f39c12' },
+    { name: 'David Herrera', color: '#c0392b' },
+    { name: 'Paula Salcedo', color: '#2c3e50' },
+    { name: 'Tomás Acosta', color: '#7f8c8d' },
+    { name: 'Natalia Prada', color: '#8e44ad' },
+  ],
+  AR: [
+    { name: 'Federico López', color: '#ff6719' },
+    { name: 'Valentina Gómez', color: '#0066cc' },
+    { name: 'Martín Fernández', color: '#2ea44f' },
+    { name: 'Lucía Martínez', color: '#9b59b6' },
+    { name: 'Santiago Rodríguez', color: '#e67e22' },
+    { name: 'Florencia García', color: '#e74c3c' },
+    { name: 'Agustín Díaz', color: '#1abc9c' },
+    { name: 'Carolina Sánchez', color: '#3498db' },
+    { name: 'Nicolás Torres', color: '#8e44ad' },
+    { name: 'Sofía Romero', color: '#d35400' },
+    { name: 'Joaquín Álvarez', color: '#27ae60' },
+    { name: 'María Ruiz', color: '#2980b9' },
+    { name: 'Mateo González', color: '#16a085' },
+    { name: 'Camila Pérez', color: '#f39c12' },
+    { name: 'Bruno Castro', color: '#c0392b' },
+    { name: 'Julieta Moreno', color: '#2c3e50' },
+    { name: 'Leandro Herrera', color: '#7f8c8d' },
+    { name: 'Bianca Ramos', color: '#8e44ad' },
+  ],
+  CL: [
+    { name: 'Matías González', color: '#ff6719' },
+    { name: 'Camila Rodríguez', color: '#0066cc' },
+    { name: 'Diego Hernández', color: '#2ea44f' },
+    { name: 'Isabella Flores', color: '#9b59b6' },
+    { name: 'Sebastián López', color: '#e67e22' },
+    { name: 'Valentina Castro', color: '#e74c3c' },
+    { name: 'Felipe Torres', color: '#1abc9c' },
+    { name: 'Catalina Ramírez', color: '#3498db' },
+    { name: 'Nicolás Araya', color: '#8e44ad' },
+    { name: 'Sofía Morales', color: '#d35400' },
+    { name: 'Pablo Muñoz', color: '#27ae60' },
+    { name: 'Andrea Soto', color: '#2980b9' },
+    { name: 'Ignacio Vega', color: '#16a085' },
+    { name: 'Javiera Contreras', color: '#f39c12' },
+    { name: 'Tomás Espinoza', color: '#c0392b' },
+    { name: 'Francisca Rojas', color: '#2c3e50' },
+    { name: 'Cristóbal Fuentes', color: '#7f8c8d' },
+    { name: 'Antonia Leiva', color: '#8e44ad' },
+  ],
+  PE: [
+    { name: 'Diego Flores', color: '#ff6719' },
+    { name: 'Valentina Torres', color: '#0066cc' },
+    { name: 'Sebastián García', color: '#2ea44f' },
+    { name: 'Camila Ríos', color: '#9b59b6' },
+    { name: 'Alejandro Chávez', color: '#e67e22' },
+    { name: 'Isabella Mendoza', color: '#e74c3c' },
+    { name: 'Nicolás Vargas', color: '#1abc9c' },
+    { name: 'Sofía Paredes', color: '#3498db' },
+    { name: 'Eduardo Espinoza', color: '#8e44ad' },
+    { name: 'Valeria Guerrero', color: '#d35400' },
+    { name: 'Rodrigo Castillo', color: '#27ae60' },
+    { name: 'Daniela Reyes', color: '#2980b9' },
+    { name: 'Álvaro Sánchez', color: '#16a085' },
+    { name: 'Luciana Pizarro', color: '#f39c12' },
+    { name: 'Fabio Delgado', color: '#c0392b' },
+    { name: 'Claudia Huertas', color: '#2c3e50' },
+    { name: 'Mauricio Quispe', color: '#7f8c8d' },
+    { name: 'Patricia Llanos', color: '#8e44ad' },
+  ],
+};
+
+function getPledgers(country) {
+  return (PLEDGERS_BY_COUNTRY[country] || PLEDGERS_BY_COUNTRY['IN']).slice();
+}
+
+// ── Active animations ──
+let activeIntervals = [];
+let activeTimeouts = [];
+
+function clearAnimations() {
+  activeIntervals.forEach(clearInterval);
+  activeTimeouts.forEach(clearTimeout);
+  activeIntervals = [];
+  activeTimeouts = [];
+}
+
+// ── Country config ──
+var COUNTRY_CONFIG = {
+  IN: {
+    name: 'India', phonePrefix: '+91',
+    taxIdLabel: 'PAN', taxIdPlaceholder: 'ABCDE1234F',
+    taxIdHint: '10-character Permanent Account Number. Must be an individual (P) PAN.',
+    postalLabel: 'PIN code', stateLabel: 'State',
+    states: ['Andhra Pradesh','Bihar','Delhi','Gujarat','Karnataka','Kerala','Maharashtra','Punjab','Rajasthan','Tamil Nadu','Telangana','Uttar Pradesh','West Bengal'],
+    taxOptional: null, purposeCode: true,
+    payoutType: 'bank_ifsc', payoutSectionLabel: 'Bank account',
+    testDepositNotice: '₹1 penny-drop to your account confirms ownership. Refunded within 2 business days.',
+    depositShort: '₹1 test deposit',
+    complianceNote: 'Payouts via Stripe Connect India. Bank account must match your PAN name. All inward remittances reported under FEMA/EDPMS. FIRC issued by your AD-I bank after each settlement.',
+    paNotice: null,
+    inviteOnly: true, currencySymbol: '₹',
+    processorShort: 'Stripe India', regulatorShort: 'RBI',
+    taxIdDoc: 'PAN', idDocs: 'Aadhaar (front + back) and a bank statement showing your PAN',
+    inviteQueueNote: 'Stripe India operates on an invite-only model due to Reserve Bank of India (RBI) regulatory requirements. Stripe cannot open accounts to all applicants simultaneously — invitations are issued in batches as RBI compliance slots become available.',
+    bdNote: "Substack's India team is in active discussions with Stripe BD to commit the 48-hour invite SLA for endorsed creators. This is not yet a live arrangement — it is the outcome this proposal is designed to secure.",
+    prefill: {
+      firstName: 'Priya', lastName: 'Raghunathan',
+      dob: '1990-03-15', taxId: 'ABCPR1234R',
+      phone: '9876543210',
+      addr: '42 Koramangala Main Road', city: 'Bengaluru',
+      state: 'Karnataka', postal: '560034',
+      btype: 'individual', pubUrl: 'priya.substack.com',
+      intent: 'P1101',
+      acct: '50100123456789', ifsc: 'HDFC0001234', atype: 'Savings',
+    },
+  },
+  ID: {
+    name: 'Indonesia', phonePrefix: '+62',
+    taxIdLabel: 'NIK (KTP number)', taxIdPlaceholder: '3273012345670001',
+    taxIdHint: '16-digit Nomor Induk Kependudukan from your KTP identity card.',
+    postalLabel: 'Kode pos', stateLabel: 'Provinsi',
+    states: ['Banten','DKI Jakarta','Jawa Barat','Jawa Tengah','Jawa Timur','Kalimantan Timur','Sulawesi Selatan','Sumatera Utara'],
+    taxOptional: { label: 'NPWP (optional)', placeholder: '00.000.000.0-000.000', hint: '15-digit tax registration. Required if annual income exceeds IDR 60 million.' },
+    purposeCode: false,
+    payoutType: 'bi_bank_code', payoutSectionLabel: 'Bank account',
+    testDepositNotice: 'Rp 1,000 test transfer confirms bank account ownership. Refunded within 2 business days.',
+    depositShort: 'Rp 1,000 test transfer',
+    complianceNote: 'Payouts via Bank Indonesia-licensed payment provider (Xendit / Midtrans / BI PJP). Substack is not a licensed PA in Indonesia.',
+    paNotice: '<strong>Local payment provider</strong> — Payouts in Indonesia are processed by a Bank Indonesia-licensed provider in IDR. Stripe is not available for Indonesia creator payouts.',
+    inviteOnly: true, currencySymbol: 'Rp ',
+    processorShort: 'Xendit / Midtrans / BI PJP', regulatorShort: 'OJK / Bank Indonesia',
+    taxIdDoc: 'NIK', idDocs: 'KTP (front + back) and a bank statement matching your NIK',
+    inviteQueueNote: 'Payouts in Indonesia require individual KYC approval from a Bank Indonesia-licensed payment provider. Applications are reviewed before payout accounts can be activated.',
+    bdNote: "Substack's Indonesia team is working with local payment providers to reduce the approval wait time for endorsed creators.",
+    prefill: {
+      firstName: 'Budi', lastName: 'Santoso',
+      dob: '1991-07-22', taxId: '3273012345670001',
+      phone: '81234567890',
+      addr: 'Jl. Sudirman No. 12', city: 'Jakarta',
+      state: 'DKI Jakarta', postal: '10220',
+      btype: 'individual', pubUrl: 'budi.substack.com',
+      bankId: 'Bank Mandiri', acctId: '1234567890123',
+    },
+  },
+  BR: {
+    name: 'Brazil', phonePrefix: '+55',
+    taxIdLabel: 'CPF', taxIdPlaceholder: '000.000.000-00',
+    taxIdHint: '11-digit Cadastro de Pessoas Físicas. Format: 000.000.000-00.',
+    postalLabel: 'CEP', stateLabel: 'Estado',
+    states: ['Bahia','Ceará','Goiás','Minas Gerais','Pará','Paraná','Pernambuco','Rio de Janeiro','Rio Grande do Sul','Santa Catarina','São Paulo'],
+    taxOptional: null, purposeCode: false,
+    payoutType: 'pix_or_bank', payoutSectionLabel: 'Payout account (PIX)',
+    testDepositNotice: 'R$ 0.01 test transfer via PIX confirms your account. Credited within seconds.',
+    depositShort: 'R$ 0.01 PIX transfer',
+    complianceNote: 'Payouts via BACEN-licensed payment institution in BRL. Substack is not a licensed PI in Brazil.',
+    paNotice: '<strong>Local payment provider</strong> — Payouts in Brazil are sent via PIX through a Banco Central do Brasil (BACEN) licensed payment institution. Stripe is not available for Brazil creator payouts.',
+    inviteOnly: false, currencySymbol: 'R$',
+    processorShort: 'BACEN-licensed PI', regulatorShort: 'Banco Central do Brasil',
+    taxIdDoc: 'CPF', idDocs: 'RG or CNH (front + back) and a bank statement',
+    inviteQueueNote: null, bdNote: null,
+    prefill: {
+      firstName: 'João', lastName: 'Silva',
+      dob: '1988-11-05', taxId: '123.456.789-09',
+      phone: '11987654321',
+      addr: 'Av. Paulista, 1000', city: 'São Paulo',
+      state: 'São Paulo', postal: '01310100',
+      btype: 'individual', pubUrl: 'joao.substack.com',
+      pixType: 'email', pixKey: 'joao@example.com',
+    },
+  },
+  MX: {
+    name: 'Mexico', phonePrefix: '+52',
+    taxIdLabel: 'RFC', taxIdPlaceholder: 'ABCD123456EFG',
+    taxIdHint: '13-character Registro Federal de Contribuyentes. Format: 4 letters · 6 digits · 3 alphanumeric.',
+    postalLabel: 'Código postal', stateLabel: 'Estado',
+    states: ['Baja California','Chihuahua','Ciudad de México','Guanajuato','Jalisco','Nuevo León','Oaxaca','Puebla','Querétaro','Sonora','Veracruz','Yucatán'],
+    taxOptional: null, purposeCode: false,
+    payoutType: 'clabe', payoutSectionLabel: 'CLABE account',
+    testDepositNotice: 'MX$ 1 SPEI transfer confirms your CLABE. Refunded within 1 business day.',
+    depositShort: 'MX$ 1 SPEI transfer',
+    complianceNote: 'Payouts via CNBV-regulated SPEI (CLABE). Substack is not a licensed IFPE in Mexico.',
+    paNotice: '<strong>Local payment provider</strong> — Payouts in Mexico are sent via SPEI to your 18-digit CLABE through a CNBV-licensed institution. Stripe is not available for Mexico creator payouts.',
+    inviteOnly: false, currencySymbol: 'MX$',
+    processorShort: 'CNBV SPEI institution', regulatorShort: 'CNBV',
+    taxIdDoc: 'RFC', idDocs: 'INE/IFE and a bank statement',
+    inviteQueueNote: null, bdNote: null,
+    prefill: {
+      firstName: 'Carlos', lastName: 'García',
+      dob: '1992-05-10', taxId: 'GARC920510AB3',
+      phone: '5512345678',
+      addr: 'Av. Insurgentes Sur 1234', city: 'Ciudad de México',
+      state: 'Ciudad de México', postal: '06600',
+      btype: 'individual', pubUrl: 'carlos.substack.com',
+      clabe: '646180157000000004',
+    },
+  },
+  CO: {
+    name: 'Colombia', phonePrefix: '+57',
+    taxIdLabel: 'Cédula de Ciudadanía (CC)', taxIdPlaceholder: '1000000000',
+    taxIdHint: '10-digit national identity document number.',
+    postalLabel: 'Código postal', stateLabel: 'Departamento',
+    states: ['Antioquia','Atlántico','Bogotá D.C.','Bolívar','Cundinamarca','Meta','Nariño','Risaralda','Santander','Valle del Cauca'],
+    taxOptional: { label: 'NIT (optional)', placeholder: '900.000.000-0', hint: 'Número de Identificación Tributaria. Required if operating as a registered business.' },
+    purposeCode: false,
+    payoutType: 'co_bank', payoutSectionLabel: 'Bank account',
+    testDepositNotice: 'COP 100 test transfer confirms your bank account. Refunded within 2 business days.',
+    depositShort: 'COP 100 test transfer',
+    complianceNote: 'Payouts via Superintendencia Financiera de Colombia (SFC) licensed payment provider in COP.',
+    paNotice: '<strong>Local payment provider</strong> — Payouts in Colombia are processed by an SFC-licensed payment provider in COP. Stripe is not available for Colombia creator payouts.',
+    inviteOnly: true, currencySymbol: 'COP ',
+    processorShort: 'SFC-licensed provider', regulatorShort: 'SFC',
+    taxIdDoc: 'Cédula (CC)', idDocs: 'Cédula de Ciudadanía and a bank statement',
+    inviteQueueNote: 'Payouts in Colombia require individual review by a Superintendencia Financiera de Colombia (SFC) licensed payment provider. Applications are reviewed before payout accounts are activated.',
+    bdNote: "Substack's LatAm team is working with SFC-licensed providers to reduce the approval wait for endorsed creators.",
+    prefill: {
+      firstName: 'Valentina', lastName: 'Jiménez',
+      dob: '1993-09-18', taxId: '1000234567',
+      phone: '3001234567',
+      addr: 'Calle 85 # 15-23', city: 'Bogotá',
+      state: 'Bogotá D.C.', postal: '110221',
+      btype: 'individual', pubUrl: 'valentina.substack.com',
+      bankCo: 'Bancolombia', atypeCo: 'Ahorros (savings)', acctCo: '12345678901',
+    },
+  },
+  AR: {
+    name: 'Argentina', phonePrefix: '+54',
+    taxIdLabel: 'CUIL / DNI', taxIdPlaceholder: '20-12345678-9',
+    taxIdHint: 'CUIL format: 20/23/24/27-DNI-check. Used for CBU/CVU account matching.',
+    postalLabel: 'Código postal', stateLabel: 'Provincia',
+    states: ['Buenos Aires','CABA','Córdoba','Corrientes','Entre Ríos','Mendoza','Misiones','Neuquén','Río Negro','Salta','Santa Fe','Tucumán'],
+    taxOptional: null, purposeCode: false,
+    payoutType: 'cbu', payoutSectionLabel: 'CBU / CVU',
+    testDepositNotice: 'ARS 1 test transfer confirms your CBU/CVU. Refunded within 1 business day.',
+    depositShort: 'ARS 1 test transfer',
+    complianceNote: 'Payouts via BCRA-regulated provider in ARS. Note: cepo cambiario (FX controls) may apply to USD receipts — consult your tax advisor.',
+    paNotice: '<strong>Local payment provider</strong> — Payouts in Argentina are processed in ARS by a BCRA-regulated provider. USD → ARS conversion is subject to BCRA FX regulations. Stripe is not available.',
+    inviteOnly: true, currencySymbol: 'ARS ',
+    processorShort: 'BCRA-regulated provider', regulatorShort: 'BCRA',
+    taxIdDoc: 'CUIL / DNI', idDocs: 'DNI (front + back) and a bank statement',
+    inviteQueueNote: 'Payouts in Argentina are processed by BCRA-regulated providers. Each creator application requires identity verification before payout accounts can be activated. USD → ARS conversion is subject to BCRA FX regulations.',
+    bdNote: "Substack's LatAm team is working with BCRA-regulated providers to reduce the approval wait for endorsed creators.",
+    prefill: {
+      firstName: 'Federico', lastName: 'López',
+      dob: '1989-02-14', taxId: '20-12345678-9',
+      phone: '91123456789',
+      addr: 'Av. Corrientes 1234', city: 'Buenos Aires',
+      state: 'CABA', postal: '1043',
+      btype: 'individual', pubUrl: 'federico.substack.com',
+      cbu: '0170099340000012345678',
+    },
+  },
+  CL: {
+    name: 'Chile', phonePrefix: '+56',
+    taxIdLabel: 'RUT', taxIdPlaceholder: '12.345.678-9',
+    taxIdHint: 'Rol Único Tributario. Format: 00.000.000-K (last digit may be K).',
+    postalLabel: 'Código postal', stateLabel: 'Región',
+    states: ['Antofagasta','Araucanía','Atacama','Biobío','Coquimbo','Los Lagos','Maule','Metropolitana de Santiago','O\'Higgins','Tarapacá','Valparaíso'],
+    taxOptional: null, purposeCode: false,
+    payoutType: 'cl_bank', payoutSectionLabel: 'Bank account',
+    testDepositNotice: 'CLP 1 test transfer confirms your account. Refunded within 2 business days.',
+    depositShort: 'CLP 1 test transfer',
+    complianceNote: 'Payouts via CMF-regulated payment provider in CLP. Substack is not a licensed Prestador de Servicios de Pago in Chile.',
+    paNotice: '<strong>Local payment provider</strong> — Payouts in Chile are processed by a Comisión para el Mercado Financiero (CMF) licensed provider in CLP. Stripe is not available.',
+    inviteOnly: true, currencySymbol: 'CLP ',
+    processorShort: 'CMF-licensed provider', regulatorShort: 'CMF',
+    taxIdDoc: 'RUT', idDocs: 'Cédula de Identidad and a bank statement',
+    inviteQueueNote: 'Payouts in Chile require review by a Comisión para el Mercado Financiero (CMF) licensed payment provider. Applications are reviewed individually before payout accounts are activated.',
+    bdNote: "Substack's LatAm team is working with CMF-licensed providers to reduce the approval wait for endorsed creators.",
+    prefill: {
+      firstName: 'Matías', lastName: 'González',
+      dob: '1990-07-30', taxId: '12.345.678-9',
+      phone: '912345678',
+      addr: 'Av. Providencia 1234', city: 'Santiago',
+      state: 'Metropolitana de Santiago', postal: '7500000',
+      btype: 'individual', pubUrl: 'matias.substack.com',
+      bankCl: 'BCI', atypeCl: 'Cuenta Corriente', acctCl: '98765432',
+    },
+  },
+  PE: {
+    name: 'Peru', phonePrefix: '+51',
+    taxIdLabel: 'DNI', taxIdPlaceholder: '12345678',
+    taxIdHint: '8-digit Documento Nacional de Identidad.',
+    postalLabel: 'Código postal', stateLabel: 'Región',
+    states: ['Amazonas','Arequipa','Ayacucho','Cajamarca','Cusco','Huánuco','Ica','Junín','La Libertad','Lambayeque','Lima','Loreto','Piura','Puno','San Martín','Ucayali'],
+    taxOptional: { label: 'RUC (optional)', placeholder: '10123456789', hint: '11-digit Registro Único de Contribuyentes. Required if operating as a business.' },
+    purposeCode: false,
+    payoutType: 'cci', payoutSectionLabel: 'CCI account',
+    testDepositNotice: 'PEN 1 test transfer confirms your CCI. Refunded within 2 business days.',
+    depositShort: 'PEN 1 test transfer',
+    complianceNote: 'Payouts via SBS-regulated entity in PEN. Substack is not a licensed Empresa de Pago in Peru.',
+    paNotice: '<strong>Local payment provider</strong> — Payouts in Peru are processed by a Superintendencia de Banca, Seguros y AFP (SBS) licensed provider in PEN. Stripe is not available.',
+    inviteOnly: true, currencySymbol: 'PEN ',
+    processorShort: 'SBS-licensed provider', regulatorShort: 'SBS',
+    taxIdDoc: 'DNI', idDocs: 'DNI and a bank statement matching your DNI',
+    inviteQueueNote: 'Payouts in Peru require approval from a Superintendencia de Banca, Seguros y AFP (SBS) licensed provider. Each creator application is reviewed before payout accounts can be activated.',
+    bdNote: "Substack's LatAm team is working with SBS-licensed providers to reduce the approval wait for endorsed creators.",
+    prefill: {
+      firstName: 'Valentina', lastName: 'Torres',
+      dob: '1994-04-25', taxId: '12345678',
+      phone: '987654321',
+      addr: 'Av. Javier Prado Este 1234', city: 'Lima',
+      state: 'Lima', postal: '15001',
+      btype: 'individual', pubUrl: 'valentina.substack.com',
+      cci: '00219100100000002953',
+    },
+  }
+};
+
+function renderPayoutFields(type) {
+  if (type === 'bank_ifsc') {
+    return '<div class="form-group">' +
+      '<label class="form-label">Account number <span class="required">*</span></label>' +
+      '<input class="form-input mono" id="acct-1a" type="text" inputmode="numeric" placeholder="9–18 digit account number" oninput="validateAccount(this)">' +
+    '</div>' +
+    '<div class="form-group">' +
+      '<label class="form-label">IFSC code <span class="required">*</span></label>' +
+      '<input class="form-input mono" id="ifsc-1a" type="text" placeholder="HDFC0001234" maxlength="11" oninput="validateIFSC(this)">' +
+      '<div class="form-hint">11-character code on your cheque book or netbanking.</div>' +
+      '<div id="ifsc-1a-err" class="form-error" style="display:none"></div>' +
+    '</div>' +
+    '<div class="form-group">' +
+      '<label class="form-label">Account type <span class="required">*</span></label>' +
+      '<select class="form-input" id="atype-1a"><option value="">Select…</option><option>Savings</option><option>Current</option></select>' +
+    '</div>';
+  }
+  if (type === 'bi_bank_code') {
+    return '<div class="form-group">' +
+      '<label class="form-label">Bank <span class="required">*</span></label>' +
+      '<select class="form-input" id="bank-id-1a">' +
+        '<option value="">Select bank…</option>' +
+        '<option>BCA — Bank Central Asia</option>' +
+        '<option>BNI — Bank Negara Indonesia</option>' +
+        '<option>BRI — Bank Rakyat Indonesia</option>' +
+        '<option>BTN — Bank Tabungan Negara</option>' +
+        '<option>Bank Danamon</option>' +
+        '<option>Bank Mandiri</option>' +
+        '<option>Bank Permata</option>' +
+        '<option>Other</option>' +
+      '</select>' +
+    '</div>' +
+    '<div class="form-group">' +
+      '<label class="form-label">Account number <span class="required">*</span></label>' +
+      '<input class="form-input mono" id="acct-id-1a" type="text" inputmode="numeric" placeholder="10–16 digit account number">' +
+      '<div class="form-hint">Must match your NIK-registered name.</div>' +
+    '</div>';
+  }
+  if (type === 'pix_or_bank') {
+    return '<div class="form-group">' +
+      '<label class="form-label">PIX key type <span class="required">*</span></label>' +
+      '<select class="form-input" id="pix-type-1a">' +
+        '<option value="">Select…</option>' +
+        '<option value="cpf">CPF</option>' +
+        '<option value="email">E-mail</option>' +
+        '<option value="phone">Telefone</option>' +
+        '<option value="evp">Chave aleatória</option>' +
+      '</select>' +
+    '</div>' +
+    '<div class="form-group">' +
+      '<label class="form-label">PIX key <span class="required">*</span></label>' +
+      '<input class="form-input mono" id="pix-key-1a" type="text" placeholder="Your PIX key">' +
+      '<div class="form-hint">PIX key must be registered in your name with a BACEN-licensed institution.</div>' +
+    '</div>';
+  }
+  if (type === 'clabe') {
+    return '<div class="form-group">' +
+      '<label class="form-label">CLABE <span class="required">*</span></label>' +
+      '<input class="form-input mono" id="clabe-1a" type="text" inputmode="numeric" maxlength="18" placeholder="18-digit CLABE">' +
+      '<div class="form-hint">Found in your bank app under "cuenta SPEI". Exactly 18 digits.</div>' +
+    '</div>';
+  }
+  if (type === 'co_bank') {
+    return '<div class="form-group">' +
+      '<label class="form-label">Bank <span class="required">*</span></label>' +
+      '<select class="form-input" id="bank-co-1a">' +
+        '<option value="">Select bank…</option>' +
+        '<option>Bancolombia</option>' +
+        '<option>BBVA Colombia</option>' +
+        '<option>Banco de Bogotá</option>' +
+        '<option>Davivienda</option>' +
+        '<option>Nequi</option>' +
+        '<option>Other</option>' +
+      '</select>' +
+    '</div>' +
+    '<div class="form-group">' +
+      '<label class="form-label">Account type <span class="required">*</span></label>' +
+      '<select class="form-input" id="atype-co-1a"><option value="">Select…</option><option>Ahorros (savings)</option><option>Corriente (checking)</option></select>' +
+    '</div>' +
+    '<div class="form-group">' +
+      '<label class="form-label">Account number <span class="required">*</span></label>' +
+      '<input class="form-input mono" id="acct-co-1a" type="text" inputmode="numeric" placeholder="Account number">' +
+    '</div>';
+  }
+  if (type === 'cbu') {
+    return '<div class="form-group">' +
+      '<label class="form-label">CBU / CVU <span class="required">*</span></label>' +
+      '<input class="form-input mono" id="cbu-1a" type="text" inputmode="numeric" maxlength="22" placeholder="22-digit CBU or CVU">' +
+      '<div class="form-hint">Found in homebanking or Mercado Pago under "datos bancarios". Exactly 22 digits.</div>' +
+    '</div>';
+  }
+  if (type === 'cl_bank') {
+    return '<div class="form-group">' +
+      '<label class="form-label">Bank <span class="required">*</span></label>' +
+      '<select class="form-input" id="bank-cl-1a">' +
+        '<option value="">Select bank…</option>' +
+        '<option>Banco Estado</option>' +
+        '<option>BCI</option>' +
+        '<option>Banco Santander Chile</option>' +
+        '<option>Scotiabank Chile</option>' +
+        '<option>Banco Falabella</option>' +
+        '<option>Itaú Chile</option>' +
+        '<option>BICE</option>' +
+        '<option>Other</option>' +
+      '</select>' +
+    '</div>' +
+    '<div class="form-group">' +
+      '<label class="form-label">Account type <span class="required">*</span></label>' +
+      '<select class="form-input" id="atype-cl-1a"><option value="">Select…</option><option>Cuenta Vista</option><option>Cuenta Corriente</option><option>Cuenta de Ahorro</option><option>Cuenta RUT</option></select>' +
+    '</div>' +
+    '<div class="form-group">' +
+      '<label class="form-label">Account number <span class="required">*</span></label>' +
+      '<input class="form-input mono" id="acct-cl-1a" type="text" inputmode="numeric" placeholder="Account number">' +
+    '</div>';
+  }
+  if (type === 'cci') {
+    return '<div class="form-group">' +
+      '<label class="form-label">CCI <span class="required">*</span></label>' +
+      '<input class="form-input mono" id="cci-1a" type="text" inputmode="numeric" maxlength="20" placeholder="20-digit CCI">' +
+      '<div class="form-hint">Código de Cuenta Interbancario — found in your bank app or web portal. Exactly 20 digits.</div>' +
+    '</div>';
+  }
+  return '';
+}
+
+function applyCountryConfig(code) {
+  var cfg = COUNTRY_CONFIG[code];
+  var noticeEl = document.getElementById('local-pa-notice-1a');
+  var formEl = document.getElementById('country-form-1a');
+  if (!cfg) {
+    if (noticeEl) noticeEl.style.display = 'none';
+    if (formEl) formEl.style.display = 'none';
+    return;
+  }
+
+  // Local PA notice
+  if (noticeEl) {
+    if (cfg.paNotice) {
+      noticeEl.innerHTML = cfg.paNotice;
+      noticeEl.style.display = 'block';
+    } else {
+      noticeEl.style.display = 'none';
+    }
+  }
+
+  // Phone prefix
+  var prefixEl = document.getElementById('phone-prefix-1a');
+  if (prefixEl) prefixEl.textContent = cfg.phonePrefix;
+
+  // Tax ID
+  var taxLabel = document.getElementById('tax-id-label-1a');
+  var taxInput = document.getElementById('tax-id-1a');
+  var taxHint  = document.getElementById('tax-id-hint-1a');
+  if (taxLabel) taxLabel.innerHTML = cfg.taxIdLabel + ' <span class="required">*</span>';
+  if (taxInput) { taxInput.placeholder = cfg.taxIdPlaceholder; taxInput.value = ''; taxInput.classList.remove('valid','invalid'); }
+  if (taxHint)  taxHint.textContent = cfg.taxIdHint;
+
+  // Postal + state labels
+  var postalLabel = document.getElementById('postal-label-1a');
+  var stateLabel  = document.getElementById('state-label-1a');
+  var stateSelect = document.getElementById('state-1a');
+  if (postalLabel) postalLabel.innerHTML = cfg.postalLabel + ' <span class="required">*</span>';
+  if (stateLabel)  stateLabel.innerHTML  = cfg.stateLabel  + ' <span class="required">*</span>';
+  if (stateSelect) {
+    var opts = '<option value="">Select…</option>';
+    for (var i = 0; i < cfg.states.length; i++) {
+      opts += '<option>' + cfg.states[i] + '</option>';
+    }
+    stateSelect.innerHTML = opts;
+  }
+
+  // Optional local tax registration
+  var optGroupEl = document.getElementById('tax-optional-group-1a');
+  var optLabelEl = document.getElementById('tax-optional-label-1a');
+  var optInputEl = document.getElementById('tax-optional-1a');
+  var optHintEl  = document.getElementById('tax-optional-hint-1a');
+  if (optGroupEl) {
+    if (cfg.taxOptional) {
+      if (optLabelEl) optLabelEl.textContent = cfg.taxOptional.label;
+      if (optInputEl) { optInputEl.placeholder = cfg.taxOptional.placeholder; optInputEl.value = ''; }
+      if (optHintEl)  optHintEl.textContent = cfg.taxOptional.hint;
+      optGroupEl.style.display = 'block';
+    } else {
+      optGroupEl.style.display = 'none';
+    }
+  }
+
+  // RBI purpose code — India only
+  var purposeEl = document.getElementById('purpose-code-section-1a');
+  if (purposeEl) purposeEl.style.display = cfg.purposeCode ? 'block' : 'none';
+
+  // Payout section
+  var payoutLabelEl = document.getElementById('payout-section-label-1a');
+  if (payoutLabelEl) payoutLabelEl.textContent = cfg.payoutSectionLabel;
+  var payoutEl = document.getElementById('payout-fields-1a');
+  if (payoutEl) payoutEl.innerHTML = renderPayoutFields(cfg.payoutType);
+
+  // Test deposit notice
+  var depositEl = document.getElementById('test-deposit-notice-1a');
+  if (depositEl) depositEl.textContent = cfg.testDepositNotice;
+
+  // Compliance note
+  var complianceEl = document.getElementById('compliance-note-1a');
+  if (complianceEl) complianceEl.textContent = cfg.complianceNote;
+
+  // Name hint
+  var nameHint = document.getElementById('name-hint-1a');
+  if (nameHint) nameHint.textContent = 'Must match your ' + cfg.taxIdLabel + ' registration exactly.';
+
+  // Show the form
+  if (formEl) formEl.style.display = 'block';
+  updateContinue1a();
+  prefillForm(code);
+}
+
+function prefillForm(code) {
+  var cfg = COUNTRY_CONFIG[code];
+  if (!cfg || !cfg.prefill) return;
+  var p = cfg.prefill;
+
+  function setVal(id, val) { var e = document.getElementById(id); if (e) e.value = val; }
+  function setChecked(id, v) { var e = document.getElementById(id); if (e) e.checked = v; }
+
+  setVal('fname-1a', p.firstName);
+  setVal('lname-1a', p.lastName);
+  setVal('dob-1a', p.dob);
+  setVal('tax-id-1a', p.taxId ? p.taxId.toUpperCase() : '');
+  setVal('phone-1a', p.phone);
+  setVal('addr1-1a', p.addr);
+  setVal('city-1a', p.city);
+  setVal('state-1a', p.state);
+  setVal('postal-1a', p.postal);
+  setVal('btype-1a', p.btype);
+  setVal('pub-url-1a', p.pubUrl);
+
+  if (p.intent) {
+    var intentEl = document.getElementById('intent-1a');
+    if (intentEl) {
+      intentEl.value = p.intent;
+      onIntentChange(intentEl, 'intent-badge-1a', 'continue-1a');
+    }
+  }
+
+  // Payout fields
+  if (code === 'IN') {
+    setVal('acct-1a', p.acct || '');
+    setVal('ifsc-1a', p.ifsc ? p.ifsc.toUpperCase() : '');
+    setVal('atype-1a', p.atype || '');
+    // trigger validation to show green checkmarks
+    var ifscEl = document.getElementById('ifsc-1a');
+    if (ifscEl) validateIFSC(ifscEl);
+    var panEl = document.getElementById('tax-id-1a');
+    if (panEl) validatePAN(panEl);
+  } else if (code === 'ID') {
+    setVal('bank-id-1a', p.bankId || '');
+    setVal('acct-id-1a', p.acctId || '');
+  } else if (code === 'BR') {
+    setVal('pix-type-1a', p.pixType || '');
+    setVal('pix-key-1a', p.pixKey || '');
+  } else if (code === 'MX') {
+    setVal('clabe-1a', p.clabe || '');
+  } else if (code === 'CO') {
+    setVal('bank-co-1a', p.bankCo || '');
+    setVal('atype-co-1a', p.atypeCo || '');
+    setVal('acct-co-1a', p.acctCo || '');
+  } else if (code === 'AR') {
+    setVal('cbu-1a', p.cbu || '');
+  } else if (code === 'CL') {
+    setVal('bank-cl-1a', p.bankCl || '');
+    setVal('atype-cl-1a', p.atypeCl || '');
+    setVal('acct-cl-1a', p.acctCl || '');
+  } else if (code === 'PE') {
+    setVal('cci-1a', p.cci || '');
+  }
+
+  setChecked('decl-cb-1a', true);
+  updateContinue1a();
+}
+
+// ── Scenario nav ──
+function showScenario(id) {
+  clearAnimations();
+  document.querySelectorAll('.shell').forEach(function(s) {
+    s.classList.remove('visible');
+    s.style.display = 'none';
+  });
+  document.querySelectorAll('.pill').forEach(function(p) { p.classList.remove('active'); });
+  var shell = document.getElementById('s-' + id);
+  if (shell) {
+    shell.classList.add('visible');
+    shell.style.display = 'block';
+    applyProfile();
+  }
+  document.querySelectorAll('.pill').forEach(function(p) {
+    var oc = p.getAttribute('onclick') || '';
+    if (oc.indexOf("'" + id + "'") !== -1) p.classList.add('active');
+  });
+  window.scrollTo(0, 0);
+
+  // Start scenario-specific animations
+  if (id === '2a') startPledgeWall('2a', 'arena-2a', 'total-2a', 'pcount-2a', 'prev-2a', 'pmon-2a', null, null, null, false);
+  if (id === '2b') startPledgeWall('2b', 'arena-2b', 'total-2b', 'pcount-2b', 'prev-2b', 'pmon-2b', 'milestone-fill-2b', 'milestone-label-2b', 'pledger-ticker-2b', true);
+  if (id === '3a') startPledgeWall('3a', 'arena-3a', 'total-3a', 'pcount-3a', 'prev-3a', null, null, null, null, false);
+  if (id === '3b') {
+    var t3b = setTimeout(function() { showScenario('4a'); }, 4000);
+    activeTimeouts.push(t3b);
+  }
+  if (id === '5a') {
+    startCelebration('arena-5a');
+    startPledgeTicker5a();
+  }
+}
+
+// ── Coin shower ──
+function spawnCoin(arenaId) {
+  const arena = document.getElementById(arenaId);
+  if (!arena) return;
+  const arenaH = arena.offsetHeight || 160;
+  const count = 2 + Math.floor(Math.random() * 3);
+  for (let i = 0; i < count; i++) {
+    const delay = i * 120;
+    const t = setTimeout(() => {
+      const coin = document.createElement('div');
+      coin.className = 'coin';
+      coin.textContent = CREATOR.currencySymbol || '₹';
+      const startX = 10 + Math.random() * 80;
+      const targetY = arenaH - 48;
+      coin.style.left = startX + '%';
+      coin.style.top = '4px';
+      coin.style.opacity = '1';
+      coin.style.transform = 'translateY(0) rotate(0deg) scale(1)';
+      arena.appendChild(coin);
+
+      // Animate via requestAnimationFrame
+      const startTime = performance.now();
+      const duration = 900 + Math.random() * 300;
+      const rot = 180 + Math.random() * 360;
+
+      function step(now) {
+        const p = Math.min(1, (now - startTime) / duration);
+        const ease = p < 0.5 ? 2*p*p : -1+(4-2*p)*p; // ease-in-out
+        const y = ease * targetY;
+        const r = ease * rot;
+        const scale = 1 - ease * 0.4;
+        const opacity = p > 0.7 ? 1 - (p - 0.7) / 0.3 : 1;
+        coin.style.transform = 'translateY(' + y + 'px) rotate(' + r + 'deg) scale(' + scale + ')';
+        coin.style.opacity = opacity;
+        if (p < 1) {
+          requestAnimationFrame(step);
+        } else {
+          if (coin.parentNode) coin.parentNode.removeChild(coin);
+        }
+      }
+      requestAnimationFrame(step);
+    }, delay);
+    activeTimeouts.push(t);
+  }
+}
+
+// ── Pledge wall engine ──
+var MILESTONE_TARGET = 12; // reader count threshold
+
+function startPledgeWall(suffix, arenaId, totalId, pcountId, prevId, pmonId, fillId, fillLabelId, tickerId, doMilestone) {
+  var count = 0;
+  var milestoneHit = false;
+  var pledgers = getPledgers(CREATOR.country);
+  var pledgerIdx = 0;
+  var pledgerQueue = [];
+
+  var interval = setInterval(function() {
+    if (pledgerIdx >= pledgers.length) { pledgerIdx = 0; }
+    var p = pledgers[pledgerIdx++];
+    count++;
+    spawnCoin(arenaId);
+
+    var pcountEl = document.getElementById(pcountId);
+    if (pcountEl) pcountEl.textContent = count;
+
+    // Milestone bar (count-based, no amounts)
+    if (fillId) {
+      var pct = Math.min(100, (count / MILESTONE_TARGET) * 100);
+      var fill = document.getElementById(fillId);
+      if (fill) fill.style.width = pct + '%';
+      var fillLabel = document.getElementById(fillLabelId);
+      if (fillLabel) fillLabel.textContent = count + ' of ' + MILESTONE_TARGET + ' readers';
+      if (pct >= 100 && !milestoneHit && doMilestone) {
+        milestoneHit = true;
+        var t = setTimeout(function() { showScenario('2c'); }, 800);
+        activeTimeouts.push(t);
+      }
+    }
+
+    // Pledger ticker — names only, no amounts
+    if (tickerId) {
+      var ticker = document.getElementById(tickerId);
+      if (ticker) {
+        pledgerQueue.unshift(p);
+        if (pledgerQueue.length > 4) pledgerQueue.pop();
+        var times = ['just now', '1m ago', '2m ago', '3m ago'];
+        ticker.innerHTML = pledgerQueue.map(function(pl, i) {
+          return '<div class="pledger-item">' +
+            '<div class="pledger-avatar" style="background:' + pl.color + '">' + pl.name[0] + '</div>' +
+            '<span class="pledger-name">' + pl.name + '</span>' +
+            '<span class="pledger-amount">interested</span>' +
+            '<span class="pledger-time">' + times[i] + '</span>' +
+            '</div>';
+        }).join('');
+      }
+    }
+  }, 1800);
+  activeIntervals.push(interval);
+}
+
+// ── 5a celebration ──
+function startCelebration(arenaId) {
+  const colors = ['#ff6719','#ffd700','#2ea44f','#0066cc','#9b59b6','#e74c3c'];
+  const interval = setInterval(() => {
+    const arena = document.getElementById(arenaId);
+    if (!arena) return;
+    // spawn confetti
+    for (let i = 0; i < 5; i++) {
+      const c = document.createElement('div');
+      c.className = 'confetti-piece';
+      c.style.left = (Math.random() * 90) + '%';
+      c.style.top = '0';
+      c.style.background = colors[Math.floor(Math.random() * colors.length)];
+      c.style.animationDelay = (Math.random() * 0.5) + 's';
+      arena.appendChild(c);
+      const t = setTimeout(() => { if (c.parentNode) c.parentNode.removeChild(c); }, 2500);
+      activeTimeouts.push(t);
+    }
+    spawnCoin(arenaId);
+  }, 600);
+  activeIntervals.push(interval);
+}
+
+// ── 5a capture sequence ──
+function startPledgeTicker5a() {
+  // Shows pledge list as static interest signals — no charges, no coin animation
+  var ticker = document.getElementById('cap-ticker-5a');
+  if (!ticker) return;
+  var shown = getPledgers(CREATOR.country).slice(0, 6);
+  var times = ['3 days ago', '3 days ago', '4 days ago', '5 days ago', '6 days ago', '1 week ago'];
+  ticker.innerHTML = shown.map(function(pl, i) {
+    return '<div class="pledger-item">' +
+      '<div class="pledger-avatar" style="background:' + pl.color + '">' + pl.name[0] + '</div>' +
+      '<span class="pledger-name">' + pl.name + '</span>' +
+      '<span class="pledger-amount" style="color:#0066cc;">interested</span>' +
+      '<span class="pledger-time">' + times[i] + '</span>' +
+      '</div>';
+  }).join('');
+}
+
+// ── Creator profile (captured from 1a, applied to all downstream screens) ──
+var CREATOR = {
+  firstName: 'Priya', country: 'IN', countryName: 'India',
+  depositStr: '₹1 IMPS credit', depositShort: '₹1 test deposit',
+  bankStr: 'HDFC account ending in …8901 (IFSC: HDFC0001234)',
+  processor: 'Stripe India', purposeCode: 'P1101', firc: true,
+  inviteOnly: true, currencySymbol: '₹',
+  processorShort: 'Stripe India', regulatorShort: 'RBI',
+  taxIdDoc: 'PAN', idDocs: 'Aadhaar (front + back) and a bank statement showing your PAN',
+  inviteQueueNote: 'Stripe India operates on an invite-only model due to RBI regulatory requirements.',
+  bdNote: "Substack's India team is in active discussions with Stripe BD to commit the 48-hour invite SLA.",
+  supportLabel: 'India support',
+};
+
+function _readBankStr(code, cfg) {
+  function _v(id) { var e = document.getElementById(id); return e ? e.value : ''; }
+  function last4(s) { var d = s.replace(/\D/g,''); return d.length >= 4 ? '…' + d.slice(-4) : '…XXXX'; }
+  if (code === 'IN') {
+    var ifsc = _v('ifsc-1a').toUpperCase();
+    var acct = _v('acct-1a');
+    var bank = ifsc ? ifsc.slice(0,4) : 'your bank';
+    return bank + ' account ending in ' + last4(acct) + (ifsc ? ' (IFSC: ' + ifsc + ')' : '');
+  }
+  if (code === 'ID') {
+    var bankSel = document.getElementById('bank-id-1a');
+    var bank = bankSel && bankSel.value ? bankSel.value.split(' — ')[0] : 'Bank';
+    var acct = _v('acct-id-1a');
+    return bank + ' account ending in ' + last4(acct);
+  }
+  if (code === 'BR') {
+    var key = _v('pix-key-1a');
+    return 'PIX: ' + (key || 'your PIX key');
+  }
+  if (code === 'MX') {
+    var clabe = _v('clabe-1a');
+    return 'CLABE ending in ' + last4(clabe);
+  }
+  if (code === 'CO') {
+    var bank = _v('bank-co-1a') || 'bank';
+    var acct = _v('acct-co-1a');
+    return bank + ' account ending in ' + last4(acct);
+  }
+  if (code === 'AR') {
+    var cbu = _v('cbu-1a');
+    return 'CBU ending in ' + last4(cbu);
+  }
+  if (code === 'CL') {
+    var bank = _v('bank-cl-1a') || 'bank';
+    var acct = _v('acct-cl-1a');
+    return bank + ' account ending in ' + last4(acct);
+  }
+  if (code === 'PE') {
+    var cci = _v('cci-1a');
+    return 'CCI ending in ' + last4(cci);
+  }
+  return cfg.payoutSectionLabel;
+}
+
+function captureProfile() {
+  var firstName = (document.getElementById('fname-1a') || {value:''}).value.trim() || 'Creator';
+  var code = (document.getElementById('country-1a') || {value:'IN'}).value || 'IN';
+  var cfg = COUNTRY_CONFIG[code] || COUNTRY_CONFIG['IN'];
+
+  var bankStr = _readBankStr(code, cfg);
+
+  var depositStr = cfg.testDepositNotice.split('.')[0];
+
+  var intentEl = document.getElementById('intent-1a');
+  var purposeCode = (intentEl && intentEl.value) ? intentEl.value : (code === 'IN' ? 'P1101' : '—');
+
+  CREATOR = {
+    firstName: firstName,
+    country: code,
+    countryName: cfg.name,
+    depositStr: depositStr,
+    depositShort: cfg.depositShort || depositStr,
+    bankStr: bankStr,
+    processor: cfg.processorShort,
+    purposeCode: purposeCode,
+    firc: code === 'IN',
+    inviteOnly: cfg.inviteOnly,
+    currencySymbol: cfg.currencySymbol,
+    processorShort: cfg.processorShort,
+    regulatorShort: cfg.regulatorShort,
+    taxIdDoc: cfg.taxIdDoc,
+    idDocs: cfg.idDocs,
+    inviteQueueNote: cfg.inviteQueueNote,
+    bdNote: cfg.bdNote,
+    supportLabel: cfg.name + ' support',
+  };
+}
+
+function _el(id) { return document.getElementById(id); }
+function _set(id, text) { var e = _el(id); if (e) e.textContent = text; }
+function _html(id, html) { var e = _el(id); if (e) e.innerHTML = html; }
+
+function applyProfile() {
+  var c = CREATOR;
+  var headerTitle = 'Set up ' + c.countryName + ' payouts';
+
+  // All headers
+  var headerIds = ['ht-1a','ht-1b','ht-2a','ht-2b','ht-2c','ht-3a','ht-3b','ht-4a','ht-4b'];
+  for (var i = 0; i < headerIds.length; i++) {
+    var hel = _el(headerIds[i]);
+    if (hel) hel.textContent = headerTitle;
+  }
+  var ht5a = _el('ht-5a');
+  if (ht5a) ht5a.textContent = c.countryName + ' payouts — account live';
+
+  // Creator name + handle
+  _set('creator-name-4a', c.firstName);
+  _set('handle-4a', c.firstName.toLowerCase().replace(/\s+/g,''));
+
+  // Penny-drop panels (2b, 2c) and 3a
+  var depositLine = c.depositStr + ' to your ' + c.bankStr;
+  _html('penny-2b', depositLine);
+  _html('penny-2c', depositLine);
+  _html('bank-3a', depositLine);
+
+  // 3a deposit banner
+  _set('deposit-banner-3a', '⏱ ' + c.depositStr + ' not confirmed — 48 hours elapsed');
+
+  // 3a bank rejection block — India-specific IMPS help, hide for other countries
+  var rejHelp = _el('bank-rejection-help');
+  if (rejHelp) rejHelp.style.display = c.country === 'IN' ? 'block' : 'none';
+  var rejBody = _el('bank-rejection-body');
+  if (rejBody) rejBody.textContent = c.country === 'IN'
+    ? 'Some banks reject IMPS credits. Click to learn more and get alternatives.'
+    : 'Some payment providers reject test transfers. Click for help resolving this.';
+
+  // 3a support links
+  _set('support-link-3a', 'Contact ' + c.supportLabel + ' →');
+  _set('footer-3a', c.supportLabel);
+
+  // 3b confirmed
+  var b3bSub = _el('bank-3b-sub');
+  if (b3bSub) b3bSub.textContent = 'Your ' + c.bankStr + ' is confirmed. We\'re now packaging your platform endorsement and submitting it to ' + c.processorShort + '.';
+  _set('bank-3b-step', 'Bank account confirmed (' + c.bankStr + ')');
+
+  // 4a — invite queue copy
+  _set('card-title-4a', 'Waiting for ' + c.processorShort + ' approval');
+  var cardSub4a = _el('card-sub-4a');
+  if (cardSub4a) cardSub4a.textContent = (c.inviteQueueNote || '') + ' Your application is in the queue — here\'s exactly where it stands.';
+  _set('tl-submit-4a', 'Platform endorsement submitted to ' + c.processorShort);
+  _set('tl-sub2-4a', '24 May 2026, 10:06 AM · includes ' + c.taxIdDoc + ', eligibility scores, pledge ledger snapshot');
+  _set('tl-received-4a', 'Application received by ' + c.processorShort + ' compliance');
+  _set('tl-invite-4a', c.processorShort + ' account approval');
+  _set('wyd-docs-4a', 'Watch your email — ' + c.processorShort + ' may request additional documents (' + c.idDocs + '). Respond within 48 hours to avoid losing your queue position.');
+  var bdNote = _el('bd-note-4a');
+  if (bdNote) bdNote.innerHTML = '<strong>What Substack is doing:</strong> ' + (c.bdNote || '');
+
+  // 4a email preview
+  _set('email-subject-4a', 'Your ' + c.countryName + ' payout account is ready to activate');
+  _set('email-processor-4a', c.processorShort);
+  _set('email-taxid-4a', c.taxIdDoc);
+  _set('email-iddocs-4a', c.idDocs.split(' and ')[0]); // first doc type
+  _set('email-sig-4a', c.processorShort + ' Compliance Team');
+  _set('bank-4a', c.bankStr);
+
+  // 4a footer
+  _set('footer-4a', c.supportLabel);
+
+  // 4b rejection copy
+  _set('tl-received-4b', 'Received by ' + c.processorShort + ' compliance');
+  _set('tl-fail-4b', c.taxIdDoc + '-to-name match failed in payment provider\'s verification system');
+  var optDocs = _el('option-docs-4b');
+  if (optDocs) optDocs.textContent = 'File a support ticket with additional documents: ' + c.idDocs + '. Manual review takes 5–7 business days.';
+  var optResubmit = _el('option-resubmit-4b');
+  if (optResubmit) optResubmit.innerHTML = 'Go back to the form and correct your legal name to match <em>exactly</em> as printed on your ' + c.taxIdDoc + ' — including spacing and spelling. Common fix for most rejections.';
+  var team4b = _el('substack-team-4b');
+  if (team4b) team4b.textContent = 'Substack\'s ' + c.countryName + ' team can advocate with ' + c.processorShort + '. Useful if you\'ve re-submitted and are still rejected, or if your ' + c.taxIdDoc + ' was recently issued.';
+  _set('footer-4b', c.supportLabel);
+
+  // 5a
+  _set('approve-check-5a', c.processorShort + ' payout account approved');
+  var b5aSub = _el('bank-5a-sub');
+  if (b5aSub) b5aSub.textContent = 'Your ' + c.processorShort + ' account is approved and linked to ' + c.bankStr + '. International subscriptions can now settle in ' + c.countryName + '.';
+  _set('bank-5a-check', 'Bank account linked — ' + c.bankStr);
+  var b5aFirc = _el('bank-5a-firc');
+  if (b5aFirc) {
+    b5aFirc.innerHTML = c.firc
+      ? 'After your first payout settles, your bank will issue a <strong>FIRC</strong> (Foreign Inward Remittance Certificate). This is issued by your bank, not Substack. Keep it for any GST LUT claims.'
+      : 'After your first payout settles, your payment provider will send a confirmation. Keep this for your local tax records.';
+  }
+  var pc5a = _el('purpose-code-5a');
+  if (pc5a) pc5a.textContent = c.purposeCode;
+
+  // 2a — endorsement panel copy
+  var sym = c.currencySymbol || '₹';
+  var endPara = _el('endorse-para-2a');
+  if (endPara) endPara.textContent = 'Once all criteria turn green, Substack will attach a signed endorsement to your ' + c.processorShort + ' application — targeting a 48-hour approval SLA instead of the standard wait. Keep publishing to close the gaps below.';
+  var noEndInfo = _el('no-endorse-info-2a');
+  if (noEndInfo) noEndInfo.innerHTML = '<strong>Without endorsement:</strong> You can still join the ' + c.processorShort + ' queue, but the typical wait is 2–6 months (or indefinitely — there is no public SLA). The endorsement is what Substack is working to change.';
+  var noEndBtn = _el('no-endorse-btn-2a');
+  if (noEndBtn) noEndBtn.textContent = 'Join ' + c.processorShort + ' queue without endorsement →';
+
+  // 2b / 2c penny panel titles and buttons
+  var depositLabel = c.depositShort || (sym + '1 test deposit');
+  var pTitle2b = _el('penny-title-2b');
+  if (pTitle2b) pTitle2b.innerHTML = '<div class="penny-dot"></div>' + depositLabel + ' in progress';
+  var pBtn2b = _el('penny-btn-2b');
+  if (pBtn2b) pBtn2b.textContent = 'I\'ve received the ' + depositLabel + ' →';
+  var pTitle2c = _el('penny-title-2c');
+  if (pTitle2c) pTitle2c.innerHTML = '<div class="penny-dot"></div>' + depositLabel + ' still in progress';
+  var pBtn2c = _el('penny-btn-2c');
+  if (pBtn2c) pBtn2c.textContent = 'I\'ve received the ' + depositLabel + ' →';
+
+  // 3a option card bodies
+  var confBody = _el('confirm-body-3a');
+  if (confBody) confBody.textContent = 'If the ' + depositLabel + ' appeared in your account, click here to confirm and proceed to review.';
+  var reBody = _el('reenter-body-3a');
+  if (reBody) reBody.textContent = 'If you entered the wrong account details, go back and correct them. We\'ll send a new ' + depositLabel + '.';
+
+  // 4a — why invite-only box
+  var whyInvite = _el('why-invite-4a');
+  if (whyInvite) whyInvite.innerHTML = '<strong>Why invite-only?</strong> ' + (c.inviteQueueNote || 'Applications are reviewed individually before payout accounts can be activated.');
+
+  // 4a — without-endorsement note
+  var noEndBox4a = _el('no-endorse-box-4a');
+  if (noEndBox4a) noEndBox4a.innerHTML = '<strong>Note — this is a proposed improvement, not yet live.</strong> Without Substack\'s endorsement, the typical ' + c.processorShort + ' approval wait is 2–6 months — or indefinitely, as there is no public SLA. The 48-hour target is what Substack\'s ' + c.countryName + ' team is actively negotiating as a committed SLA for endorsed creators. This screen reflects what the proposal would look like once in place.';
+
+  // 4a — pledge note
+  _set('pledge-note-4a', 'Share your pledge link while you wait. Pledges are captured the moment your ' + c.processorShort + ' account is approved and goes live.');
+
+  // 4b — explanation paragraph
+  var failEx = _el('fail-explain-4b');
+  if (failEx) failEx.textContent = 'The payment provider\'s compliance team couldn\'t match your submitted ' + c.taxIdDoc + ' to their third-party identity verification system. This is usually caused by a name spelling mismatch — for example, if your ' + c.taxIdDoc + ' record shows one spelling but you entered a variation — or a recently issued ' + c.taxIdDoc + ' that hasn\'t propagated to verification databases yet.';
+
+  // 2c static pledger ticker — update names to match country
+  var sp2c = _el('static-pledgers-2c');
+  if (sp2c) {
+    var pool = getPledgers(c.country);
+    var times2c = ['now', '1m ago', '3m ago', '5m ago'];
+    sp2c.innerHTML = pool.slice(0, 4).map(function(pl, i) {
+      return '<div class="pledger-item">' +
+        '<div class="pledger-avatar" style="background:' + pl.color + '">' + pl.name[0] + '</div>' +
+        '<span class="pledger-name">' + pl.name + '</span>' +
+        '<span class="pledger-amount">interested</span>' +
+        '<span class="pledger-time">' + times2c[i] + '</span>' +
+        '</div>';
+    }).join('');
+  }
+}
+
+// ── 1a form logic ──
+function validatePAN(input) {
+  input.value = input.value.toUpperCase();
+  const val = input.value;
+  const errEl = document.getElementById('pan-1a-err');
+  if (val.length === 10) {
+    // check entity type (5th char must be P for individual)
+    if (val[3] !== 'P') {
+      input.classList.add('invalid'); input.classList.remove('valid');
+      if (errEl) { errEl.style.display = 'flex'; errEl.textContent = '⚠ PAN entity type \'' + val[3] + '\' is not accepted — only individual (P) PANs are valid for creator payouts.'; }
+    } else if (/^[A-Z]{5}[0-9]{4}[A-Z]$/.test(val)) {
+      input.classList.add('valid'); input.classList.remove('invalid');
+      if (errEl) errEl.style.display = 'none';
+    } else {
+      input.classList.add('invalid'); input.classList.remove('valid');
+      if (errEl) { errEl.style.display = 'flex'; errEl.textContent = '⚠ Invalid PAN format. Expected: AAAAA9999A (5 letters · 4 digits · 1 letter)'; }
+    }
+  } else {
+    input.classList.remove('valid', 'invalid');
+    if (errEl) errEl.style.display = 'none';
+  }
+  updateContinue1a();
+}
+
+function validateIFSC(input) {
+  input.value = input.value.toUpperCase();
+  const val = input.value;
+  const errEl = document.getElementById('ifsc-1a-err');
+  if (val.length === 11) {
+    if (/^[A-Z]{4}0[A-Z0-9]{6}$/.test(val)) {
+      input.classList.add('valid'); input.classList.remove('invalid');
+      if (errEl) errEl.style.display = 'none';
+    } else {
+      input.classList.add('invalid'); input.classList.remove('valid');
+      if (errEl) { errEl.style.display = 'flex'; errEl.textContent = '⚠ Invalid format. Expected: AAAA0AAAAAA (4 letters · zero · 6 alphanumeric). Example: HDFC0001234'; }
+    }
+  } else {
+    input.classList.remove('valid', 'invalid');
+    if (errEl) errEl.style.display = 'none';
+  }
+  updateContinue1a();
+}
+
+function validateAccount(input) {
+  const val = input.value.replace(/\D/g, '');
+  input.value = val;
+  if (val.length > 0 && (val.length < 9 || val.length > 18)) {
+    input.classList.add('invalid'); input.classList.remove('valid');
+  } else if (val.length >= 9) {
+    input.classList.add('valid'); input.classList.remove('invalid');
+  } else {
+    input.classList.remove('valid', 'invalid');
+  }
+}
+
+function onIntentChange(sel, badgeId, continueBtnId) {
+  const badge = document.getElementById(badgeId);
+  const badgeText = document.getElementById(badgeId + '-text');
+  if (sel.value && badge) {
+    badge.style.display = 'block';
+    if (badgeText) {
+      const labels = {
+        'P1101': 'P1101 — Newsletter / written content',
+        'P1102': 'P1102 — Podcast / audio content',
+        'P1103': 'P1103 — Video content',
+        'P1006': 'P1006 — Research services',
+        'P0801': 'P0801 — Consulting services',
+      };
+      badgeText.textContent = labels[sel.value] || sel.value;
+    }
+  } else if (badge) {
+    badge.style.display = 'none';
+  }
+  updateContinue1a();
+}
+
+function updateContinue1a() {
+  var btn = document.getElementById('continue-1a');
+  var cb = document.getElementById('decl-cb-1a');
+  var countryEl = document.getElementById('country-1a');
+  var intent = document.getElementById('intent-1a');
+  var purposeSection = document.getElementById('purpose-code-section-1a');
+  if (!btn) return;
+  var checked = cb && cb.checked;
+  var countrySet = countryEl && countryEl.value !== '';
+  var intentRequired = purposeSection && purposeSection.style.display !== 'none';
+  var intentSet = !intentRequired || (intent && intent.value !== '');
+  btn.disabled = !(checked && countrySet && intentSet);
+}
+
+function submitForm1a() {
+  captureProfile();
+  var btn = document.getElementById('continue-1a');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span> Verifying…';
+  var t = setTimeout(function() { showScenario('2a'); }, 1500);
+  activeTimeouts.push(t);
+}
+
+// ── 3a toggle ──
+function toggleBankRejection() {
+  const el = document.getElementById('bank-rejection-detail');
+  if (el) el.style.display = el.style.display === 'none' ? 'block' : 'none';
+}
+
+// ── Init ──
+window.onerror = function(msg, src, line) {
+  console.error('Page error at line ' + line + ': ' + msg);
+};
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', function() {
+    var hash = location.hash.replace('#', '') || '1a';
+    showScenario(hash);
+  });
+} else {
+  var hash = location.hash.replace('#', '') || '1a';
+  showScenario(hash);
+}
+</script>
+</body>
+</html>
