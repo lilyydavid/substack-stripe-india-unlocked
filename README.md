@@ -34,6 +34,9 @@ Substack acts as Stripe's front-end screening layer. Substack introduces creator
 
 The first two are entirely within Substack's control. The third requires a single API change from Stripe.
 
+
+
+https://github.com/lilyydavid/substack-stripe-india-unlocked/blob/9a1aaf9e2e2ac509626fc87185e3931c11c7c2cc/docs/Creator%20KYC%20Endorsement.png
 ---
 
 ## What's in this repo
