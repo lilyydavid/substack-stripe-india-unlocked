@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Unblocking Indian Creator Payouts on Substack</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  background: #f7f6f3;
+  color: #1a1a1a;
+  line-height: 1.6;
+}
+
+.container {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 64px 24px 96px;
+}
+
+h1 {
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  margin-bottom: 12px;
+}
+
+.subtitle {
+  font-size: 17px;
+  color: #555;
+  margin-bottom: 40px;
+}
+
+h2 {
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #888;
+  margin: 40px 0 12px;
+}
+
+p {
+  font-size: 16px;
+  margin-bottom: 16px;
+  color: #333;
+}
+
+.problem-box {
+  background: #fff;
+  border: 1px solid #e0ddd8;
+  border-radius: 8px;
+  padding: 24px;
+  margin-bottom: 32px;
+}
+
+.problem-box p { margin-bottom: 0; }
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 15px;
+  margin-bottom: 24px;
+}
+
+th {
+  text-align: left;
+  padding: 8px 12px;
+  background: #eeecea;
+  font-weight: 600;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #666;
+}
+
+td {
+  padding: 10px 12px;
+  border-bottom: 1px solid #e8e5e1;
+  vertical-align: top;
+}
+
+tr:last-child td { border-bottom: none; }
+
+@media (max-width: 600px) {
+  table, tbody { display: block; }
+  thead { display: none; }
+  tr {
+    display: block;
+    background: #fff;
+    border: 1px solid #e0ddd8;
+    border-radius: 8px;
+    padding: 14px 16px;
+    margin-bottom: 10px;
+  }
+  tr:last-child td { border-bottom: none; }
+  td {
+    display: block;
+    border: none;
+    padding: 0;
+    font-size: 14px;
+  }
+  td.label {
+    font-weight: 700;
+    font-size: 14px;
+    white-space: normal;
+    width: auto;
+    margin-bottom: 3px;
+  }
+  td:nth-child(2) {
+    font-size: 12px;
+    color: #999;
+    margin-bottom: 6px;
+  }
+  td:nth-child(3) {
+    font-size: 13px;
+    color: #555;
+    line-height: 1.5;
+  }
+  td code { font-size: 11px; }
+}
+
+.label {
+  font-weight: 600;
+  white-space: nowrap;
+  width: 160px;
+}
+
+code {
+  font-family: "SF Mono", ui-monospace, monospace;
+  font-size: 13px;
+  background: #eeecea;
+  padding: 1px 5px;
+  border-radius: 3px;
+}
+
+.artifacts {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 24px;
+}
+
+.artifact-link {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: #fff;
+  border: 1px solid #e0ddd8;
+  border-radius: 8px;
+  padding: 14px 18px;
+  text-decoration: none;
+  color: #1a1a1a;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.artifact-link:hover {
+  border-color: #ff6719;
+  box-shadow: 0 2px 8px rgba(255,103,25,0.08);
+}
+
+.artifact-icon { font-size: 20px; flex-shrink: 0; }
+
+.artifact-label {
+  font-weight: 600;
+  font-size: 15px;
+  display: block;
+}
+
+.artifact-desc {
+  font-size: 13px;
+  color: #777;
+  display: block;
+  margin-top: 2px;
+}
+
+.open-questions {
+  background: #fff;
+  border: 1px solid #e0ddd8;
+  border-left: 3px solid #ff6719;
+  border-radius: 8px;
+  padding: 20px 24px;
+  margin-bottom: 32px;
+}
+
+.open-questions p {
+  margin-bottom: 10px;
+  font-size: 15px;
+}
+
+.open-questions p:last-child { margin-bottom: 0; }
+
+.scope-note {
+  font-size: 14px;
+  color: #999;
+  margin-top: 32px;
+  padding-top: 24px;
+  border-top: 1px solid #e8e5e1;
+}
+
+.callout {
+  background: #fff;
+  border: 1px solid #e0ddd8;
+  border-left: 3px solid #1a1a1a;
+  border-radius: 8px;
+  padding: 18px 24px;
+  margin-bottom: 24px;
+  font-size: 15px;
+  color: #333;
+  line-height: 1.6;
+}
+.callout strong { color: #1a1a1a; }
+
+.api-sketch {
+  background: #1a1a1a;
+  border-radius: 8px;
+  padding: 18px 20px;
+  margin-bottom: 24px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.api-sketch pre {
+  color: #e8e8e8;
+  font-family: "SF Mono", ui-monospace, monospace;
+  font-size: 12px;
+  line-height: 1.75;
+  margin: 0;
+  white-space: pre;
+}
+.api-sketch .key { color: #79b8ff; }
+.api-sketch .str { color: #9ecbff; }
+.api-sketch .num { color: #f8c555; }
+.api-sketch .cmt { color: #6a737d; }
+
+.why-stripe {
+  background: #fff;
+  border: 1px solid #e0ddd8;
+  border-radius: 8px;
+  padding: 24px;
+  margin-bottom: 8px;
+}
+.why-stripe p { margin-bottom: 12px; }
+.why-stripe p:last-child { margin-bottom: 0; }
+
+.cta-box {
+  background: #fff3ec;
+  border: 1.5px solid #ff6719;
+  border-radius: 8px;
+  padding: 20px 24px;
+  margin-bottom: 32px;
+}
+.cta-box p { margin-bottom: 10px; font-size: 15px; }
+.cta-box p:last-child { margin-bottom: 0; }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <h1>Unblocking Indian Creator Payouts on Substack</h1>
+  <p class="subtitle">A concrete proposal: Substack vouches for creator legitimacy directly to Stripe, eliminating the need for manual per-creator compliance review.</p>
+
+  <div class="problem-box">
+    <p>Indian creators on Substack cannot receive subscription revenue. Stripe India operates invite-only — a response to Reserve Bank of India pressure — with no self-service path in and no way to appeal. Substack's fee waiver for Indian creators patches the symptom. This proposal addresses the structural cause.</p>
+  </div>
+
+  <h2>The Fix</h2>
+  <p>The fastest near-term fix is not new financial infrastructure. It is giving Stripe's compliance team a structured endorsement signal from Substack that reduces their per-creator manual review burden from ~45 minutes to near-zero. The relevant product is Stripe Connect Custom accounts — Substack is the platform, Indian creators are the connected accounts receiving cross-border subscription payouts.</p>
+
+  <table>
+    <tr>
+      <th>Issue</th>
+      <th>Owner</th>
+      <th>What it does</th>
+    </tr>
+    <tr>
+      <td class="label">#101 — Creator KYC intake</td>
+      <td>Substack</td>
+      <td>Creator form collecting tax ID (PAN), bank account, and RBI remittance category</td>
+    </tr>
+    <tr>
+      <td class="label">#102 — Creator track record</td>
+      <td>Substack</td>
+      <td>Substack-signed summary of creator credibility: account age, subscriber count, open rate, and a clean chargeback history</td>
+    </tr>
+    <tr>
+      <td class="label">#103 — Stripe fast-track</td>
+      <td>Stripe</td>
+      <td>One optional field on <code>POST /v1/accounts</code> that accepts Substack's endorsement — targeting 48h review vs. the current 2–6 week queue</td>
+    </tr>
+  </table>
+
+  <p>Creator KYC intake and Creator track record are entirely within Substack's control — useful as compliance records regardless of what Stripe decides. The Stripe fast-track requires just one new optional API field.</p>
+
+  <div class="callout">
+    <strong>What this is not:</strong> A KYC bypass. Stripe still makes the regulatory filing under its RBI Payment Aggregator licence. Substack's endorsement replaces data collection — Stripe stops re-verifying what Substack already holds and vouches for. The 45-minute review burden disappears. The compliance obligation does not.
+  </div>
+
+  <p style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:#888;margin-bottom:10px;">Proposed field shape — #103</p>
+  <div class="api-sketch">
+<pre><span class="key">POST</span> /v1/accounts
+{
+  <span class="key">"country"</span>:       <span class="str">"IN"</span>,
+  <span class="key">"business_type"</span>: <span class="str">"individual"</span>,
+  <span class="cmt">// ... existing fields unchanged ...</span>
+  <span class="key">"platform_endorsement"</span>: {
+    <span class="key">"issuer"</span>:      <span class="str">"substack.com"</span>,
+    <span class="key">"creator_ref"</span>: <span class="str">"sha256:a3f9c2..."</span>,  <span class="cmt">// hashed — no raw PAN here</span>
+    <span class="key">"issued_at"</span>:   <span class="str">"2026-05-27T00:00:00Z"</span>,
+    <span class="key">"metrics"</span>: {
+      <span class="key">"account_age_days"</span>:  <span class="num">547</span>,
+      <span class="key">"free_subscribers"</span>:  <span class="num">1240</span>,
+      <span class="key">"avg_open_rate_pct"</span>: <span class="num">38.5</span>,
+      <span class="key">"chargeback_count"</span>:  <span class="num">0</span>,
+      <span class="key">"published_posts"</span>:   <span class="num">14</span>
+    },
+    <span class="key">"signature"</span>: <span class="str">"ed25519:MEUCIQDx..."</span>  <span class="cmt">// verified against Substack's public key</span>
+  }
+}</pre>
+  </div>
+
+  <h2>Why Stripe should act</h2>
+  <div class="why-stripe">
+    <p>Ten thousand Indian creators are blocked from Substack's subscription product today. At typical creator revenue levels that is eight-figure annual GMV — and Stripe's processing fees on it. The full economics are in the batch endorsement model below.</p>
+    <p>Beyond Substack: the fast-track field is reusable infrastructure. Any high-trust platform with pre-verified merchants — Patreon, Gumroad, Ko-fi — can use the same mechanism. Substack is the pilot. Stripe gets a new onboarding shortcut for an entire class of platform partners, not a bespoke one-off.</p>
+  </div>
+
+  <h2>Artifacts</h2>
+  <div class="artifacts">
+    <a class="artifact-link" href="demo.html">
+      <span class="artifact-icon">🖥</span>
+      <span>
+        <span class="artifact-label">Live mockup — Creator KYC intake flow</span>
+        <span class="artifact-desc">Interactive walkthrough of the creator onboarding form across all payout scenarios</span>
+      </span>
+    </a>
+    <a class="artifact-link" href="https://github.com/lilyydavid/substack-stripe-india-unlocked/blob/main/api-design.md">
+      <span class="artifact-icon">📄</span>
+      <span>
+        <span class="artifact-label">API design — #101, #102, #103</span>
+        <span class="artifact-desc">Request/response specs, field validation rules, how the endorsement is signed, and open questions for Stripe</span>
+      </span>
+    </a>
+    <a class="artifact-link" href="https://github.com/lilyydavid/substack-stripe-india-unlocked/blob/main/risk-analysis.md">
+      <span class="artifact-icon">⚠️</span>
+      <span>
+        <span class="artifact-label">Risk analysis</span>
+        <span class="artifact-desc">Privacy law exposure, data minimisation options, fraud prevention, and bank code maintenance — each with mitigations</span>
+      </span>
+    </a>
+    <a class="artifact-link" href="https://github.com/lilyydavid/substack-stripe-india-unlocked/blob/main/batch-endorsement-proposal.md">
+      <span class="artifact-icon">📊</span>
+      <span>
+        <span class="artifact-label">Batch endorsement model</span>
+        <span class="artifact-desc">Why 10K creators changes the Stripe conversation from feature request to platform agreement — with economics</span>
+      </span>
+    </a>
+  </div>
+
+  <h2>How verification works</h2>
+  <div class="why-stripe">
+    <p>Stripe receives the <code>platform_endorsement</code> field and verifies it in three steps.</p>
+    <p><strong>1. Key registration (one-time).</strong> Substack registers an Ed25519 public key with Stripe via a partner onboarding flow. Stripe stores it against <code>issuer: substack.com</code>. Substack can rotate the key with advance notice; old signatures remain valid during a grace period.</p>
+    <p><strong>2. Signature verification.</strong> On account creation, Stripe verifies the signature against the registered public key. If it fails, the field is ignored — the account falls into the standard queue. No hard rejection.</p>
+    <p><strong>3. Metrics thresholds.</strong> Stripe applies its own minimum thresholds to the metrics payload (e.g. account age, chargeback count) before granting fast-track status. Substack sets the bar for endorsement; Stripe sets the bar for fast-track. Both can evolve independently.</p>
+    <p>The full signing scheme and key rotation protocol are in the API design document.</p>
+  </div>
+
+  <h2>Open Questions</h2>
+  <div class="open-questions">
+    <p><strong>For Stripe India:</strong> Does your RBI compliance need the raw PAN number, or will you accept a hashed version? The answer determines Substack's data privacy exposure under Indian law.</p>
+    <p><strong>For Stripe Connect:</strong> Does an existing partner tier already fast-track review for established platforms? If so, #103 may not need a new API field — the endorsement goes through existing support channels instead.</p>
+    <p><strong>For Substack:</strong> Does a formal platform agreement that shares — and caps — liability for endorsed creators work within your legal framework?</p>
+  </div>
+
+  <h2>Next step</h2>
+  <div class="cta-box">
+    <p>Three questions above are the decision blockers — one each for Stripe India, Stripe Connect, and Substack. Each can be answered independently. Answer them and this moves from proposal to implementation.</p>
+    <p>The API design and risk analysis are ready for technical review now.</p>
+  </div>
+
+  <p class="scope-note">This covers the endorsement path only — the three issues above. Payment escrow, earnings dashboards, and tax compliance automation come next, but only if this path works.</p>
+
+</div>
+</body>
+</html>
